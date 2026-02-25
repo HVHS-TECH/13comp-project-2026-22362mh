@@ -1,0 +1,15 @@
+button {
+    color: purple;
+    font-family: Verdana;
+}
+
+h1 {
+    color: blue;
+    font-family: Verdana;
+    text-align: center;
+    font-size: 100px;
+}
+
+body {
+    background-color: pink;
+}
