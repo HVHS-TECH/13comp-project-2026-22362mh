@@ -9,7 +9,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <button onclick="fb_initialise()">Button</button>
+
+    <!-- Heading for the login page. It updates when the user logs in to let the user know they logged in -->
+    <h1 id="loginStatus">You have not logged in yet!</h1>
+
+    <!-- Login button -->
+    <div class="container">
+        <button onclick="fb_initialise(), fb_login()">Press to login</button>
+    </div>
+
+    <!-- Form for the user to choose a username -->
+    <h2>Please choose a username after logging in!</h2>
+    <label for="username">Input your username:</label><br><br>
+    <input type="text" id="username" name="username">
+    <input type="submit" onclick='getFormInput()'>
 </body>
 </html>

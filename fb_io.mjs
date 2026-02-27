@@ -5,10 +5,12 @@ console.log('%c fb_io.mjs',
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 var fb_gamedb;
 
+//Function for initialising firebase
 function fb_initialise(){
 const FB_GAMECONFIG = {
   apiKey: "AIzaSyDuJnRiExxWkHuXgYW_9LpGaVLcfVYRIiE",
@@ -22,10 +24,34 @@ const FB_GAMECONFIG = {
 };
 
     const FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
-    fb_gamedb= getDatabase(FB_GAMEAPP);
+    fb_gamedb = getDatabase(FB_GAMEAPP);
     console.info(fb_gamedb);
 }
 
+function fb_login(){
+    const AUTH = getAuth();
+    const PROVIDER = new GoogleAuthProvider();
+    // The following makes Google ask the user to select the account
+PROVIDER.setCustomParameters({
+        prompt: 'select_account'
+    });
+    signInWithPopup(AUTH, PROVIDER).then((result) => {
+        console.log("Sign in successful!");
+        console.log(result);
+        let loginStatus = document.getElementById("loginStatus");
+        loginStatus.innerHTML = "You have logged in!";
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
+
+function getFormInput(){
+    var username = document.getElementById("username");
+    console.log(username);
+}
+
+//Exporting the needed functions
 export {
-    fb_initialise
+    fb_initialise, fb_login, getFormInput
 };

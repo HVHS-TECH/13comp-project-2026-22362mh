@@ -24,6 +24,21 @@ h1 {
     border-bottom-width: 20px;
 }
 
+h2 {
+    font-size: 40px;
+    padding-top: 50px;
+}
+
+label {
+    font-size: 30px;
+}
+
+#loginStatus {
+    font-size: 100px;
+}
+
 body {
     background-color: rgb(153, 8, 32);
+    color:rgb(245, 181, 172);
+    text-align: center;
 }
