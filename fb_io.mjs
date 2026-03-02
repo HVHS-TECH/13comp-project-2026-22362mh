@@ -8,7 +8,9 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
+/***** GLOBAL VARIABLES *****/
 var fb_gamedb;
+var signedIn = false;
 
 //Function for initialising firebase
 function fb_initialise(){
@@ -40,6 +42,7 @@ PROVIDER.setCustomParameters({
         console.log(result);
         let loginStatus = document.getElementById("loginStatus");
         loginStatus.innerHTML = "You have logged in!";
+        signedIn = true;
     })
     .catch((error) => {
         console.log(error);
@@ -47,13 +50,21 @@ PROVIDER.setCustomParameters({
 }
 
 function getFormInput(){
-    //Getting the user's username from the HTML form
-    var username = document.getElementById("username");
-    username = username.value; //Making sure the username is the value or text that the user inputted.
-    console.log(username);
+    //If the user is signed in, they can input a username successfully and then it'll be displayed
+    if (signedIn == true){
+        //Getting the user's username from the HTML form
+        var username = document.getElementById("username");
+        username = username.value; //Making sure the username is the value or text that the user inputted.
+        console.log(username);
 
-    var usernameDisplay = document.getElementById("usernameDisplay");
-    usernameDisplay.innerHTML = "Your username is: " +  username;
+        //Displaying the username using HTMl
+        var usernameDisplay = document.getElementById("usernameDisplay");
+        usernameDisplay.innerHTML = "Your username is: " +  username;
+    }
+    //If the user isn't signed in and tries to input a username, they get alerted.
+    else if (signedIn == false){
+        alert("You have not logged in yet!");
+    }
 }
 
 //Exporting the needed functions
