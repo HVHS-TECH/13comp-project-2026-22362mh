@@ -47,8 +47,13 @@ PROVIDER.setCustomParameters({
 }
 
 function getFormInput(){
+    //Getting the user's username from the HTML form
     var username = document.getElementById("username");
+    username = username.value; //Making sure the username is the value or text that the user inputted.
     console.log(username);
+
+    var usernameDisplay = document.getElementById("usernameDisplay");
+    usernameDisplay.innerHTML = "Your username is: " +  username;
 }
 
 //Exporting the needed functions
