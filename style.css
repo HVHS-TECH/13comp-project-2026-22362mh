@@ -41,6 +41,12 @@ label {
     font-size: 100px;
 }
 
+#displayUsername {
+    text-align: right;
+    padding-right: 60px;
+    font-size: 30px;
+}
+
 body {
     background-color: rgb(153, 8, 32);
     color:rgb(245, 181, 172);

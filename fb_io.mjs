@@ -10,7 +10,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstati
 
 /***** GLOBAL VARIABLES *****/
 var fb_gamedb;
-var signedIn = false;
+var signedIn = false; 
 
 //Function for initialising firebase
 function fb_initialise(){
@@ -58,8 +58,8 @@ function getFormInput(){
         console.log(username);
 
         //Displaying the username using HTMl
-        var usernameDisplay = document.getElementById("usernameDisplay");
-        usernameDisplay.innerHTML = "Your username is: " +  username;
+        //var usernameDisplay = document.getElementById("usernameDisplay");
+        //usernameDisplay.innerHTML = "Your username is: " +  username;
     }
     //If the user isn't signed in and tries to input a username, they get alerted.
     else if (signedIn == false){
