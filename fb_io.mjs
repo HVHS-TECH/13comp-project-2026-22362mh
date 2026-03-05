@@ -1,8 +1,19 @@
+/************************************/
+// fb_io.mjs
+//
+// Written by Mio Hoffman, Term 1, 2026
+//  Firebase functions:
+// Initialise firebase
+// Handles login
+// Gets the user's username after logging in
+/************************************/
+
 const COL_C = 'white';	    // These two const are part of the coloured
 const COL_B = '#820b8d';	//  console.log for functions scheme
 console.log('%c fb_io.mjs',
             'color: blue; background-color: white;');
 
+//Importing the needed firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
@@ -30,6 +41,7 @@ const FB_GAMECONFIG = {
     console.info(fb_gamedb);
 }
 
+//Has the user login with google
 function fb_login(){
     const AUTH = getAuth();
     const PROVIDER = new GoogleAuthProvider();
@@ -57,9 +69,8 @@ function getFormInput(){
         username = username.value; //Making sure the username is the value or text that the user inputted.
         console.log(username);
 
-        //Displaying the username using HTMl
-        //var usernameDisplay = document.getElementById("usernameDisplay");
-        //usernameDisplay.innerHTML = "Your username is: " +  username;
+        var usernameDisplay = document.getElementById("usernameDisplay");
+        usernameDisplay.innerHTML = "Your username is: " +  username;
     }
     //If the user isn't signed in and tries to input a username, they get alerted.
     else if (signedIn == false){
