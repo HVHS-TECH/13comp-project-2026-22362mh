@@ -1,11 +1,6 @@
-import { fb_initialise }
-    from './fb_io.mjs';
-    window.fb_initialise = fb_initialise;
+// this can be all done combined
+import { fb_initialise, fb_login, getFormInput } from './fb_io.mjs';
 
-import { fb_login }
-    from './fb_io.mjs';
-    window.fb_login = fb_login;
-
-import { getFormInput }
-    from './fb_io.mjs';
-    window.getFormInput = getFormInput;
+window.fb_initialise = fb_initialise;
+window.fb_login = fb_login;
+window.getFormInput = getFormInput;

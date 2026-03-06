@@ -9,16 +9,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- love the css in general :) -->
 
     <!-- Heading for the login page. It updates when the user logs in to let the user know they logged in -->
     <h1 id="loginStatus">You have not logged in yet!</h1>
 
     <!-- Login button -->
     <div class="container">
+        <!-- this can be done using an event listener, rather than having to set window.function_name -->
+        <!-- as in add an eventlistener -->
         <button onclick="fb_initialise(), fb_login()">Press to login</button>
     </div>
 
     <!-- Form for the user to choose a username -->
+    <!-- this should be a form element -->
     <h2>Please choose a username after logging in!</h2>
     <label for="username">Input your username:</label><br><br>
     <input type="text" id="username" name="username">
