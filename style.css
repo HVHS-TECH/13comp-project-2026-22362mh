@@ -5,7 +5,7 @@ button {
     font-size: 80px;
     padding-left: 20px;
     padding-right: 20px;
-    border-color:rgb(54, 7, 5);
+    border-color: rgb(54, 7, 5);
 }
 
 .container {
@@ -49,6 +49,6 @@ label {
 
 body {
     background-color: rgb(153, 8, 32);
-    color:rgb(245, 181, 172);
+    color: rgb(245, 181, 172);
     text-align: center;
 }
