@@ -6,6 +6,7 @@
 // Initialise firebase
 // Handles login
 // Gets the user's username after logging in
+// Stores the username in firebase
 /************************************/
 
 const COL_C = 'white';	    // These two const are part of the coloured
@@ -15,13 +16,15 @@ console.log('%c fb_io.mjs',
 
 //Importing the needed firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 /***** GLOBAL VARIABLES *****/
 var fb_gamedb;
 var signedIn = false;
+var userUid;
+var username;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -55,6 +58,9 @@ function fb_login() {
         let loginStatus = document.getElementById("loginStatus");
         loginStatus.innerHTML = "You have logged in!";
         signedIn = true;
+
+        userUid = result.user.uid;
+        console.log(userUid);
     })
         .catch((error) => {
             console.log(error);
@@ -65,17 +71,30 @@ function getFormInput() {
     //If the user is signed in, they can input a username successfully and then it'll be displayed
     if (signedIn == true) {
         //Getting the user's username from the HTML form
-        var username = document.getElementById("username");
+        username = document.getElementById("username");
         username = username.value; //Making sure the username is the value or text that the user inputted.
         console.log(username);
 
         var usernameDisplay = document.getElementById("usernameDisplay");
         usernameDisplay.innerHTML = "Your username is: " + username;
+
+        storeUsername();
     }
     //If the user isn't signed in and tries to input a username, they get alerted.
     else if (signedIn == false) {
         alert("You have not logged in yet!");
     }
+}
+
+function storeUsername(){
+    var writePath = "/userData/" + userUid;
+    var data = {"Username": username};
+    const dbReference= ref(fb_gamedb, writePath);
+    set(dbReference, data).then(() => {
+        console.log("Username has been stored");
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 //Exporting the needed functions
