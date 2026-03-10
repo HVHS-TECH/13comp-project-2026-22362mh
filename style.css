@@ -41,10 +41,8 @@ label {
     font-size: 100px;
 }
 
-#displayUsername {
-    text-align: right;
-    padding-right: 60px;
-    font-size: 30px;
+#gameSelection {
+    display: none;
 }
 
 body {

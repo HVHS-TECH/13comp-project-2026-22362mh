@@ -92,6 +92,8 @@ function storeUsername(){
     const dbReference= ref(fb_gamedb, writePath);
     set(dbReference, data).then(() => {
         console.log("Username has been stored");
+        var gameSelectionButton = document.getElementById("gameSelection");
+        gameSelectionButton.style.display = "block";
     }).catch((error) => {
         console.log(error);
     });

@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(99, 99, 233);
+    color: rgb(253, 204, 41);
+}
+
+h1 {
+    font-size: 100px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+p {
+    font-size: 30px;
+    font-family: verdana;
+    color: white;
+}
