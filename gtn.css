@@ -1,16 +1,23 @@
 body {
-    background-color: rgb(99, 99, 233);
+    background-color: rgb(143, 143, 236);
     color: rgb(253, 204, 41);
+    text-align: center;
 }
 
 h1 {
     font-size: 100px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
 }
 
 .container {
     display: flex;
     justify-content: space-around;
     flex-direction: row;
+    gap: 20px;
 }
 
 p {
