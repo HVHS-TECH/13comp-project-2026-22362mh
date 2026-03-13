@@ -57,10 +57,11 @@ function fb_login() {
         console.log(result);
         let loginStatus = document.getElementById("loginStatus");
         loginStatus.innerHTML = "You have logged in!";
-        signedIn = true;
 
         userUid = result.user.uid;
         console.log(userUid);
+
+        signedIn = true;
     })
         .catch((error) => {
             console.log(error);
@@ -87,12 +88,15 @@ function getFormInput() {
 }
 
 function storeUsername(){
+    //The path to the firebase is under Userdata and the value of the user's UID
     var writePath = "/userData/" + userUid;
     var data = {"Username": username};
     const dbReference= ref(fb_gamedb, writePath);
     set(dbReference, data).then(() => {
         console.log("Username has been stored");
+        //Getting the gameSelection button from the html
         var gameSelectionButton = document.getElementById("gameSelection");
+        //Making it appear on screen after the username is stored successfully
         gameSelectionButton.style.display = "block";
     }).catch((error) => {
         console.log(error);
@@ -101,5 +105,5 @@ function storeUsername(){
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_login, getFormInput
+    fb_initialise, fb_login, getFormInput, saveUserUid
 };
