@@ -10,6 +10,7 @@ import { ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase
 //GLOBAL VARIABLES
 var fb_gamedb;
 var userUid;
+var username;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -41,18 +42,38 @@ function getUserUid(){
             //Seperating the key of the userUid apart from the user data
             userUid = Object.keys(fb_data);
             console.log("User Uid: " + userUid);
+
+            getUsername();
         } else {
             console.log("No record found");
         }
     }).catch((error) => {
         console.log(error);
     });
-    waitingList();
+}
+
+function getUsername(){
+    console.log(userUid);
+    var userNamePath = "/userData/" + userUid + "/Username";
+    const dbReference= ref(fb_gamedb, userNamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            username = fb_data;
+
+            waitingList();
+        } else {
+            console.log("No record found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 function waitingList(){
     var writePath = "/lobby/GTN/" + userUid;
-    var dataToWrite = "username";
+    var dataToWrite = username;
     const dbReference= ref(fb_gamedb, writePath);
     set(dbReference, dataToWrite).then(() => {
         console.log("User is in GTN lobby waiting list!");
