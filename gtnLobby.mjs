@@ -32,6 +32,7 @@ function fb_initialise() {
     getUserUid();
 }
 
+//Getting the userUid from the userData
 function getUserUid(){
     var userUidPath = "/userData";
     const dbReference= ref(fb_gamedb, userUidPath);
@@ -40,6 +41,7 @@ function getUserUid(){
         if (fb_data != null) {
             console.log(fb_data);
             //Seperating the key of the userUid apart from the user data
+            //NOTE: Doesn't work with more than one person
             userUid = Object.keys(fb_data);
             console.log("User Uid: " + userUid);
 
@@ -52,6 +54,7 @@ function getUserUid(){
     });
 }
 
+//Getting the user's username from userData using their Uid
 function getUsername(){
     console.log(userUid);
     var userNamePath = "/userData/" + userUid + "/Username";
@@ -71,6 +74,7 @@ function getUsername(){
     });
 }
 
+//Inputting the user's uid and username in the waiting list for the GTN lobby
 function waitingList(){
     var writePath = "/lobby/GTN/" + userUid;
     var dataToWrite = username;
