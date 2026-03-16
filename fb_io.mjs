@@ -105,5 +105,5 @@ function storeUsername(){
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_login, getFormInput, saveUserUid
+    fb_initialise, fb_login, getFormInput
 };

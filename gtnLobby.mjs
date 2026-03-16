@@ -28,19 +28,34 @@ function fb_initialise() {
     fb_gamedb = getDatabase(FB_GAMEAPP);
     console.info(fb_gamedb);
 
-    readUserUid();
+    getUserUid();
 }
 
-function readUserUid(){
+function getUserUid(){
     var userUidPath = "/userData";
     const dbReference= ref(fb_gamedb, userUidPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
+            //Seperating the key of the userUid apart from the user data
+            userUid = Object.keys(fb_data);
+            console.log("User Uid: " + userUid);
         } else {
             console.log("No record found");
         }
+    }).catch((error) => {
+        console.log(error);
+    });
+    waitingList();
+}
+
+function waitingList(){
+    var writePath = "/lobby/GTN/" + userUid;
+    var dataToWrite = "username";
+    const dbReference= ref(fb_gamedb, writePath);
+    set(dbReference, dataToWrite).then(() => {
+        console.log("User is in GTN lobby waiting list!");
     }).catch((error) => {
         console.log(error);
     });
