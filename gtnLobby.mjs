@@ -6,6 +6,7 @@ console.log('%c fb_io.mjs',
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 //GLOBAL VARIABLES
 var fb_gamedb;
@@ -29,27 +30,25 @@ function fb_initialise() {
     fb_gamedb = getDatabase(FB_GAMEAPP);
     console.info(fb_gamedb);
 
-    getUserUid();
+    console.log("Firebase has been initialised");
+
+    userAuthState();
 }
 
-//Getting the userUid from the userData
-function getUserUid(){
-    var userUidPath = "/userData";
-    const dbReference= ref(fb_gamedb, userUidPath);
-    get(dbReference).then((snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            console.log(fb_data);
-            //Seperating the key of the userUid apart from the user data
-            //NOTE: Doesn't work with more than one person
-            userUid = Object.keys(fb_data);
-            console.log("User Uid: " + userUid);
+fb_initialise();
 
+function userAuthState(){
+    const AUTH = getAuth();
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            console.log("User is logged in!");
+            userUid = user.uid;
+            console.log(userUid);
             getUsername();
         } else {
-            console.log("No record found");
+            console.log("User is logged out!");
         }
-    }).catch((error) => {
+    }, (error) => {
         console.log(error);
     });
 }
@@ -85,5 +84,3 @@ function waitingList(){
         console.log(error);
     });
 }
-
-fb_initialise();
