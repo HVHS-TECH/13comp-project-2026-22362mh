@@ -83,4 +83,24 @@ function waitingList(){
     }).catch((error) => {
         console.log(error);
     });
+    pairUp();
+}
+
+//This function needs to:
+// Check the amount of players in the waiting list
+// If two or more are in the waiting list, the first user on the list will randomly make a pair with another user
+// The two users will need to be transferred to a game lobby.
+function pairUp(){
+    var readPath = "/lobby/GTN";
+    const dbReference= ref(fb_gamedb, readPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+        } else {
+            console.log("No record was found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 }
