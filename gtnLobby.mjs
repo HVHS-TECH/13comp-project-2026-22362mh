@@ -12,6 +12,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 var fb_gamedb;
 var userUid;
 var username;
+var uids;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -83,24 +84,44 @@ function waitingList(){
     }).catch((error) => {
         console.log(error);
     });
-    pairUp();
+    checkWaitingList();
 }
 
 //This function needs to:
 // Check the amount of players in the waiting list
 // If two or more are in the waiting list, the first user on the list will randomly make a pair with another user
 // The two users will need to be transferred to a game lobby.
-function pairUp(){
+function checkWaitingList(){
     var readPath = "/lobby/GTN";
     const dbReference= ref(fb_gamedb, readPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
+            uids = Object.keys(fb_data);
+            console.log(uids);
+                if (uids.length >= 2){
+                    console.log("There are at least 2 people in the waiting list!");
+                    pairUp();
+                }
+                else if (uids.length < 2 && uids.length > 0){
+                    console.log("There aren't enough people in the waiting list!");
+                    checkWaitingList();
+                }
         } else {
             console.log("No record was found");
         }
     }).catch((error) => {
         console.log(error);
     });
+}
+function pairUp(){
+    console.log(uids);
+    console.log("Pair up function");
+    if (userUid == uids[0]){
+        console.log("You are the first person in the waiting list!");
+    }
+    else {
+        console.log("You are NOT the first person in the waiting list");
+    }
 }
