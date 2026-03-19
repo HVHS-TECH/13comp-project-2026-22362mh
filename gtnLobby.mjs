@@ -13,6 +13,7 @@ var fb_gamedb;
 var userUid;
 var username;
 var uids;
+var partnerUid;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -120,8 +121,26 @@ function pairUp(){
     console.log("Pair up function");
     if (userUid == uids[0]){
         console.log("You are the first person in the waiting list!");
+        var maxNum = uids.length - 1;
+        var partner = Math.floor(Math.random() * maxNum) + 1;
+        partnerUid = uids[partner];
+        console.log("Your partner is number: " + partner + " = " + partnerUid);
+        gameLobby();
     }
     else {
         console.log("You are NOT the first person in the waiting list");
     }
+} 
+
+function gameLobby(){
+    var gameRoomID = Math.floor(Math.random() * 200);
+    console.log(gameRoomID);
+    var writePath = "/gameRoomGTN/" + gameRoomID;
+    var data = {firstPlayer: userUid}, {secondPlayer: partnerUid};
+    const dbReference= ref(fb_gamedb, writePath);
+    set(dbReference, data).then(() => {
+        console.log("You and your partner are in a game lobby!");
+    }).catch((error) => {
+        console.log(error);
+    });
 }
