@@ -107,7 +107,8 @@ function checkWaitingList(){
                 }
                 else if (uids.length < 2 && uids.length > 0){
                     console.log("There aren't enough people in the waiting list!");
-                    checkWaitingList();
+                    //Checking the waiting list every two seconds rather than constantly
+                    setTimeout(checkWaitingList, 2000);
                 }
         } else {
             console.log("No record was found");
@@ -116,8 +117,8 @@ function checkWaitingList(){
         console.log(error);
     });
 }
+
 function pairUp(){
-    console.log(uids);
     console.log("Pair up function");
     if (userUid == uids[0]){
         console.log("You are the first person in the waiting list!");
@@ -133,13 +134,28 @@ function pairUp(){
 } 
 
 function gameLobby(){
+    console.log("gameLobby");
     var gameRoomID = Math.floor(Math.random() * 200);
-    console.log(gameRoomID);
-    var writePath = "/gameRoomGTN/" + gameRoomID;
-    var data = {firstPlayer: userUid}, {secondPlayer: partnerUid};
-    const dbReference= ref(fb_gamedb, writePath);
-    set(dbReference, data).then(() => {
-        console.log("You and your partner are in a game lobby!");
+    gameRoomID = String(gameRoomID);
+    console.log("Game room ID: " + gameRoomID, typeof gameRoomID);
+
+    var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
+    console.log("first player write path");
+    var firstPlayerData = {firstPlayer: userUid};
+    console.log("first player data");
+    const dbReference= ref(fb_gamedb, firstPlayerWritePath);
+    console.log("database reference");
+    set(dbReference, firstPlayerData).then(() => {
+        console.log("You are in a game lobby!");
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    var secondPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
+    var secondPlayerData = {secondPlayer: partnerUid};
+    const dbReference2 = ref(fb_gamedb, secondPlayerWritePath);
+    set(dbReference2, secondPlayerData).then(() => {
+        console.log("You are in a game lobby!");
     }).catch((error) => {
         console.log(error);
     });
