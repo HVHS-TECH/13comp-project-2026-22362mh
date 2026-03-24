@@ -96,6 +96,7 @@ function checkWaitingList(){
     var readPath = "/lobby/GTN";
     const dbReference= ref(fb_gamedb, readPath);
     get(dbReference).then((snapshot) => {
+        console.log("Yippie, I worked!!!!!!!!!!!!!!!!!!!!!  ")
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
@@ -105,10 +106,8 @@ function checkWaitingList(){
                     console.log("There are at least 2 people in the waiting list!");
                     pairUp();
                 }
-                else if (uids.length < 2 && uids.length > 0){
-                    console.log("There aren't enough people in the waiting list!");
-                    //Checking the waiting list every two seconds rather than constantly
-                    setTimeout(checkWaitingList, 2000);
+                else {
+                    fb_onValue();
                 }
         } else {
             console.log("No record was found");
@@ -118,8 +117,20 @@ function checkWaitingList(){
     });
 }
 
+function fb_onValue(){
+    const monitorAndRead = "/lobby/GTN"
+    const dbReference = ref(fb_gamedb, monitorAndRead);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+        } else {
+            console.log("No record found");
+        }
+    });
+}
+
 function pairUp(){
-    console.log("Pair up function");
     if (userUid == uids[0]){
         console.log("You are the first person in the waiting list!");
         var maxNum = uids.length - 1;
@@ -134,17 +145,13 @@ function pairUp(){
 } 
 
 function gameLobby(){
-    console.log("gameLobby");
     var gameRoomID = Math.floor(Math.random() * 200);
     gameRoomID = String(gameRoomID);
     console.log("Game room ID: " + gameRoomID, typeof gameRoomID);
 
     var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
-    console.log("first player write path");
     var firstPlayerData = {firstPlayer: userUid};
-    console.log("first player data");
     const dbReference= ref(fb_gamedb, firstPlayerWritePath);
-    console.log("database reference");
     set(dbReference, firstPlayerData).then(() => {
         console.log("You are in a game lobby!");
     }).catch((error) => {
@@ -160,3 +167,5 @@ function gameLobby(){
         console.log(error);
     });
 }
+
+//NOTE TO SELF: check if onvalue function works next spell
