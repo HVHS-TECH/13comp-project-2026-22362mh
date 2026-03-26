@@ -4,9 +4,9 @@ console.log('%c fb_io.mjs',
     'color: blue; background-color: white;');
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase,ref, set, get, remove, onValue  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //GLOBAL VARIABLES
 var fb_gamedb;
@@ -14,6 +14,7 @@ var userUid;
 var username;
 var uids;
 var partnerUid;
+var gameRoomID;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -137,17 +138,15 @@ function pairUp(){
         var partner = Math.floor(Math.random() * maxNum) + 1;
         partnerUid = uids[partner];
         console.log("Your partner is number: " + partner + " = " + partnerUid);
-        gameLobby();
+        createGameLobby();
     }
     else {
         console.log("You are NOT the first person in the waiting list");
     }
 } 
 
-function gameLobby(){
-    var gameRoomID = Math.floor(Math.random() * 200);
-    gameRoomID = String(gameRoomID);
-    console.log("Game room ID: " + gameRoomID, typeof gameRoomID);
+function createGameLobby(){
+    gameRoomID = userUid;
 
     var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
     var firstPlayerData = {firstPlayer: userUid};
@@ -158,14 +157,29 @@ function gameLobby(){
         console.log(error);
     });
 
-    var secondPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
+    var deleteRecord = "/lobby/GTN/" + userUid;
+    const dbReference2 = ref(fb_gamedb, deleteRecord);
+    remove(dbReference2).then(() => {
+        console.log("You have been taken off the waiting list for GTN");
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    
+    var writePath = "/gameRoomGTN/" + gameRoomID;
     var secondPlayerData = {secondPlayer: partnerUid};
-    const dbReference2 = ref(fb_gamedb, secondPlayerWritePath);
-    set(dbReference2, secondPlayerData).then(() => {
-        console.log("You are in a game lobby!");
+    const dbReference3 = ref(fb_gamedb, writePath);
+    update(dbReference3, secondPlayerData).then(() => {
+        console.log("Partner is in lobby!");
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    var deletePartnerRecord = "/lobby/GTN/" + partnerUid;
+    const dbReference4 = ref(fb_gamedb, deleteRecord);
+    remove(dbReference4).then(() => {
+        console.log("Partner has been taken off waiting list!");
     }).catch((error) => {
         console.log(error);
     });
 }
-
-//NOTE TO SELF: check if onvalue function works next spell
