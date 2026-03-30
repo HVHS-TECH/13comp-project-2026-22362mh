@@ -3,16 +3,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { ref, set, query, orderByChild, limitToLast, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
 const FB_GAMECONFIG = {
-    apiKey: "AIzaSyCd2Z_1nM5CI6l6NVOrvlN7EDbKEaSTiv0",
-    authDomain: "comp-2025-mio-hoffman.firebaseapp.com",
-    databaseURL: "https://comp-2025-mio-hoffman-default-rtdb.firebaseio.com",
-    projectId: "comp-2025-mio-hoffman",
-    storageBucket: "comp-2025-mio-hoffman.firebasestorage.app",
-    messagingSenderId: "724400775542",
-    appId: "1:724400775542:web:dccd0b43fb6bc612725a57",
-    measurementId: "G-GYKCG77RCD"
-  };
+        apiKey: "AIzaSyDuJnRiExxWkHuXgYW_9LpGaVLcfVYRIiE",
+        authDomain: "compgamefirebase-miohoffman.firebaseapp.com",
+        databaseURL: "https://compgamefirebase-miohoffman-default-rtdb.firebaseio.com",
+        projectId: "compgamefirebase-miohoffman",
+        storageBucket: "compgamefirebase-miohoffman.firebasestorage.app",
+        messagingSenderId: "879943944137",
+        appId: "1:879943944137:web:27014e6f84077c4b994a18",
+        measurementId: "G-2LQPB4K734"
+    };
 
 const COL_C = 'white';	    // These two const are part of the coloured
 const COL_B = '#CD7F32';	//  console.log for functions scheme
@@ -35,10 +36,20 @@ function fb_initialise() {
 
 fb_initialise();
 
-function appleAttackScoreRec(){
-    const uid = localStorage.getItem("userUid");
-    const appleAttackScore = localStorage.getItem("appleAttackUserScore");
+//Need to get the user logged in again to get userUid
 
+const AUTH = getAuth();
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            console.log("User is logged in!");
+        } else {
+            console.log("User is logged out!");
+        }
+    }, (error) => {
+        console.log(error);
+    });
+
+function appleAttackScoreRec(){
     const appleAttackScorePath = "gameScores/" + uid + "/appleAttack/score";
     var reference = ref(FB_GAMEDB, appleAttackScorePath);
     set(reference, appleAttackScore).then(() => {
