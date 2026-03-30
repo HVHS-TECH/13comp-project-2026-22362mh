@@ -1,0 +1,29 @@
+h1{
+    text-align: center;
+    font-size: 150px;
+    color:crimson;
+    border-bottom: 10px solid rgb(161, 10, 10);
+}
+
+body{
+    background-color: bisque;
+}
+
+button{
+    color: white;
+    background-color: burlywood;
+    font-size: 40px;
+    border: 5px solid darkgoldenrod
+}
+
+p{
+    text-align: center;
+    font-family: verdana;
+    font-size: 20px;
+    color:indianred;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-evenly;
+}
