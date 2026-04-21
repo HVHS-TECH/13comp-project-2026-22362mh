@@ -146,8 +146,19 @@ function pairUp(){
     }
     else {
         console.log("You are NOT the first person in the waiting list");
+        do {
+            checkIfInGame();
+        }
+        while (inGame == false);
     }
 } 
+
+function checkIfInGame(){
+    if (inGame == true){
+        console.log("You are in a lobby!");
+        location.href ="gtnGameScreen.html";
+    }
+}
 
 function createGameLobby(){
     gameRoomID = userUid;
