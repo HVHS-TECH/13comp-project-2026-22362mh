@@ -16,6 +16,7 @@ var username;
 var uids;
 var partnerUid;
 var gameRoomID;
+var inGame = false;
 
 //Function for initialising firebase
 function fb_initialise() {
