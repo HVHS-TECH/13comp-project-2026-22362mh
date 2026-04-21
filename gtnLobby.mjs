@@ -147,11 +147,9 @@ function pairUp(){
     }
     else {
         console.log("You are NOT the first person in the waiting list");
-        do {
+        while (inGame == false){
             checkIfInGame();
         }
-        while (inGame == false);
-    }
 } 
 
 function checkIfInGame(){
