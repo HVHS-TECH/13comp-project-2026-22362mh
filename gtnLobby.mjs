@@ -16,7 +16,6 @@ var username;
 var uids;
 var partnerUid;
 var gameRoomID;
-var inGame = false;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -147,15 +146,6 @@ function pairUp(){
     }
     else {
         console.log("You are NOT the first person in the waiting list");
-        while (inGame == false){
-            checkIfInGame();
-        }
-} 
-
-function checkIfInGame(){
-    if (inGame == true){
-        console.log("You are in a lobby!");
-        location.href ="gtnGameScreen.html";
     }
 }
 
@@ -164,7 +154,7 @@ function createGameLobby(){
 
     //Putting the first player in the game room with the id being their user UID
     var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
-    var firstPlayerData = {firstPlayer: userUid}; //Putting them in as the first player for the turns
+    var firstPlayerData = {firstPlayer: partnerUid}; //Putting them in as the first player for the turns
     const dbReference= ref(fb_gamedb, firstPlayerWritePath);
     set(dbReference, firstPlayerData).then(() => {
         console.log("You are in a game lobby!");
