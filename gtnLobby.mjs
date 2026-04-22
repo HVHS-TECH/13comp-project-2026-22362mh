@@ -150,11 +150,11 @@ function pairUp(){
 }
 
 function createGameLobby(){
-    gameRoomID = userUid;
+    gameRoomID = partnerUid;
 
     //Putting the first player in the game room with the id being their user UID
     var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
-    var firstPlayerData = {firstPlayer: partnerUid}; //Putting them in as the first player for the turns
+    var firstPlayerData = {firstPlayer: userUid}; //Putting them in as the first player for the turns
     const dbReference= ref(fb_gamedb, firstPlayerWritePath);
     set(dbReference, firstPlayerData).then(() => {
         console.log("You are in a game lobby!");
