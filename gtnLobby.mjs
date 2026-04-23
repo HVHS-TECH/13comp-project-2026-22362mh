@@ -1,8 +1,3 @@
-const COL_C = 'white';	    // These two const are part of the coloured
-const COL_B = '#820b8d';	//  console.log for functions scheme
-console.log('%c fb_io.mjs',
-    'color: blue; background-color: white;');
-
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getDatabase,ref, set, get, remove, onValue  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
@@ -13,7 +8,6 @@ import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-datab
 var fb_gamedb;
 var userUid;
 var username;
-var uids;
 var joinCode;
 
 //Function for initialising firebase
@@ -37,8 +31,6 @@ function fb_initialise() {
 
     userAuthState();
 }
-
-fb_initialise();
 
 //Logging the user back in as a new html page loads
 function userAuthState(){

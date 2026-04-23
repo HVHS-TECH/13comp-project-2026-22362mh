@@ -67,25 +67,6 @@ function fb_login() {
         });
 }
 
-function getFormInput() {
-    //If the user is signed in, they can input a username successfully and then it'll be displayed
-    if (signedIn == true) {
-        //Getting the user's username from the HTML form
-        username = document.getElementById("username");
-        username = username.value; //Making sure the username is the value or text that the user inputted.
-        console.log(username);
-
-        var usernameDisplay = document.getElementById("usernameDisplay");
-        usernameDisplay.innerHTML = "Your username is: " + username;
-
-        storeUsername();
-    }
-    //If the user isn't signed in and tries to input a username, they get alerted.
-    else if (signedIn == false) {
-        alert("You have not logged in yet!");
-    }
-}
-
 function storeUsername(){
     //The path to the firebase is under Userdata and the value of the user's UID
     var writePath = "/userData/" + userUid;
@@ -104,5 +85,5 @@ function storeUsername(){
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_login, getFormInput
-};
+    fb_initialise, fb_login
+}
