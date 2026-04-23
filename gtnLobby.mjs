@@ -14,8 +14,7 @@ var fb_gamedb;
 var userUid;
 var username;
 var uids;
-var partnerUid;
-var gameRoomID;
+var joinCode;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -96,7 +95,12 @@ function createLobby(){
     const dbReference= ref(fb_gamedb, writePath);
     set(dbReference, dataToWrite).then(() => {
         console.log("You have created a game room!");
+        joinCode = userUid;
         leaveWaitingRoom();
+
+        var joinCodeDisplay = document.getElementById("joinCode");
+        joinCodeDisplay.innerHTML = "You have successfully made a game room! Your join code is : " + joinCode;
+        joinCodeDisplay.style.display = "block";
     }).catch((error) => {
         console.log(error);
     });
