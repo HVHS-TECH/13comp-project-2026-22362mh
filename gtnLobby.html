@@ -11,10 +11,13 @@
 <body>
     <h1>Guess the Number Lobby</h1>
 
-    <p>You are in the lobby for Guess the Number!</p>
-
     <h3 id="joinCode">You have successfully made a game lobby. Your code is: </h3>
     
-    <button onclick="createLobby()">Create Lobby</button>
+    <button onclick="createLobby()">Create Game Room</button>
+    
+    <h2>If you would like to enter someone's game room, please enter their code</h2>
+    <label for="gameRoomCode">Code:</label><br><br>
+    <input type="text" id="gameRoomCode" name="gameRoomCode">
+    <input type="submit" onclick='getGameRoomCode()'>
 </body>
 </html>

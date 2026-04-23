@@ -106,6 +106,27 @@ function createLobby(){
     });
 }
 
+function getGameRoomCode(){
+    var gameRoomCode = document.getElementById("gameRoomCode");
+    gameRoomCode = gameRoomCode.value; 
+    console.log(gameRoomCode);
+
+    var readPath = "/gameRoom/GTN";
+    const dbReference= ref(fb_gamedb, readPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            var allGameRoomCodes = Object.keys(fb_data);
+            console.log(allGameRoomCodes);
+        } else {
+            console.log("No record was found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 function leaveWaitingRoom(){
     var deleteRecord = "/lobby/GTN/" + userUid;
     const dbReference2 = ref(fb_gamedb, deleteRecord);
@@ -117,5 +138,5 @@ function leaveWaitingRoom(){
 }
 
 export {
-    createLobby
+    createLobby, getGameRoomCode
 }

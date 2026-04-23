@@ -20,3 +20,7 @@ window.getFormInput = getFormInput;
 import { createLobby }
     from './gtnLobby.mjs';
 window.createLobby = createLobby;
+
+import { getGameRoomCode }
+    from './gtnLobby.mjs';
+window.getGameRoomCode = getGameRoomCode;
