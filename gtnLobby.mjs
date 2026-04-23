@@ -88,80 +88,21 @@ function waitingList(){
     }).catch((error) => {
         console.log(error);
     });
-    checkWaitingList();
 }
 
-//This function:
-// Checks the amount of players in the waiting list
-// If two or more are in the waiting list, the pairUp function is called
-// If there aren't at least two users in the waiting list, the onValue function is called
-function checkWaitingList(){
-    var readPath = "/lobby/GTN";
-    const dbReference= ref(fb_gamedb, readPath);
-    get(dbReference).then((snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            console.log(fb_data);
-            uids = Object.keys(fb_data); //Getting the uids which are keys of the objects in the waiting list as an array
-            console.log(uids);
-                if (uids.length >= 2){ //If the length of the array is at least 2, there are two or more people in the waiting list
-                    console.log("There are at least 2 people in the waiting list!");
-                    pairUp(); 
-                }
-                else {
-                    fb_onValue();
-                }
-        } else {
-            console.log("No record was found");
-        }
+function createLobby(){
+    var writePath = "gameRoom/GTN/" + userUid;
+    var dataToWrite = {"firstPlayer": userUid};
+    const dbReference= ref(fb_gamedb, writePath);
+    set(dbReference, dataToWrite).then(() => {
+        console.log("You have created a game room!");
+        leaveWaitingRoom();
     }).catch((error) => {
         console.log(error);
     });
 }
 
-//This function checks to see if the waiting list has updated
-function fb_onValue(){
-    const monitorAndRead = "/lobby/GTN"
-    const dbReference = ref(fb_gamedb, monitorAndRead);
-    onValue(dbReference, (snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            checkWaitingList();
-        } else {
-            console.log("No record found");
-        }
-    });
-}
-
-function pairUp(){
-    if (userUid == uids[0]){ //If the user is the first person in the waiting list
-        console.log("You are the first person in the waiting list!");
-        var maxNum = uids.length - 1; //The number of people in the waiting list apart from the user so they don't pair up with themself
-        var partner = Math.floor(Math.random() * maxNum) + 1; //Getting random number for waiting list array other than 0 which is the first position
-        partnerUid = uids[partner]; //Getting the partner's uid with the list of uids with the partner number in the list
-        console.log("Your partner is number: " + partner + " = " + partnerUid);
-        createGameLobby();
-    }
-    else {
-        console.log("You are NOT the first person in the waiting list");
-        location.href="gtnGameScreen.html";
-    }
-}
-
-function createGameLobby(){
-    gameRoomID = partnerUid;
-
-    //Putting the first player in the game room with the id being their user UID
-    var firstPlayerWritePath = "/gameRoomGTN/" + gameRoomID;
-    var firstPlayerData = {firstPlayer: userUid}; //Putting them in as the first player for the turns
-    const dbReference= ref(fb_gamedb, firstPlayerWritePath);
-    set(dbReference, firstPlayerData).then(() => {
-        console.log("You are in a game lobby!");
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    //Deleting the first player from the waiting list
+function leaveWaitingRoom(){
     var deleteRecord = "/lobby/GTN/" + userUid;
     const dbReference2 = ref(fb_gamedb, deleteRecord);
     remove(dbReference2).then(() => {
@@ -169,25 +110,8 @@ function createGameLobby(){
     }).catch((error) => {
         console.log(error);
     });
+}
 
-    //Putting the first player's partner in the game room as the second player
-    var writePath = "/gameRoomGTN/" + gameRoomID;
-    var secondPlayerData = {secondPlayer: partnerUid}; //Putting them in as second player for the turns
-    const dbReference3 = ref(fb_gamedb, writePath);
-    update(dbReference3, secondPlayerData).then(() => {
-        console.log("Partner is in lobby!");
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    //Deleting the partner from the waiting list
-    var deletePartnerRecord = "/lobby/GTN/" + partnerUid;
-    const dbReference4 = ref(fb_gamedb, deletePartnerRecord);
-    remove(dbReference4).then(() => {
-        console.log("Partner has been taken off waiting list!");
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    location.href="gtnGameScreen.html";
+export {
+    createLobby
 }

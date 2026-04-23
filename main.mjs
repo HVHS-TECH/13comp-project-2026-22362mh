@@ -16,3 +16,7 @@ window.fb_login = fb_login;
 import { getFormInput }
     from './fb_io.mjs';
 window.getFormInput = getFormInput;
+
+import { createLobby }
+    from './gtnLobby.mjs';
+window.createLobby = createLobby;
