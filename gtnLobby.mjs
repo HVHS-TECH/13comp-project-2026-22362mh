@@ -126,8 +126,6 @@ function fb_onValue(){
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
-
             checkWaitingList();
         } else {
             console.log("No record found");
@@ -146,6 +144,7 @@ function pairUp(){
     }
     else {
         console.log("You are NOT the first person in the waiting list");
+        location.href="gtnGameScreen.html";
     }
 }
 
