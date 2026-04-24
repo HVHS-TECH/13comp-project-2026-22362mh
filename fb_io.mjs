@@ -5,8 +5,6 @@
 //  Firebase functions:
 // Initialise firebase
 // Handles login
-// Gets the user's username after logging in
-// Stores the username in firebase
 /************************************/
 
 const COL_C = 'white';	    // These two const are part of the coloured
@@ -43,7 +41,28 @@ function fb_initialise() {
     console.info(fb_gamedb);
 }
 
+function fb_login() {
+    const AUTH = getAuth();
+    const PROVIDER = new GoogleAuthProvider();
+    // The following makes Google ask the user to select the account
+    PROVIDER.setCustomParameters({
+        prompt: 'select_account'
+    });
+    signInWithPopup(AUTH, PROVIDER).then((result) => {
+        console.log("Sign in successful!");
+        console.log(result);
+
+        userUid = result.user.uid;
+        console.log(userUid);
+
+        signedIn = true;
+    })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb
+    fb_initialise, fb_gamedb, fb_login, userUid, signedIn
 }

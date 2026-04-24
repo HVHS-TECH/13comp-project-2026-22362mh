@@ -14,7 +14,7 @@ import { fb_getSignUpDetails }
 window.fb_getSignUpDetails = fb_getSignUpDetails;
 
 import { fb_login }
-    from './register.mjs';
+    from './fb_io.mjs';
 window.fb_login = fb_login;
 
 import { checkUserUids }

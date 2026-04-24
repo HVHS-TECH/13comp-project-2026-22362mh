@@ -11,39 +11,39 @@
 
 var correctAnswer;
 
-function getNumber(){
+function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
     console.log(correctAnswer);
 }
 
-function getGuess(){
+function getGuess() {
     //Gets the user's guess from the html form
     var guess = document.getElementById("guess");
     guess = guess.value;
     console.log(guess);
 
     //If the user guesses the correct answer, they get an alert saying they've got it right
-    if (guess == correctAnswer){
+    if (guess == correctAnswer) {
         console.log("You got it right!");
         alert("You got it right!");
     }
     //If their guess is zero or a negative number, they get an alert
-    else if(guess <= 0){
+    else if (guess <= 0) {
         alert("Put in a number between 1 and 20!");
     }
     //If their guess is higher than 20 (the max guess value), they get an alert
-    else if(guess > 20){
+    else if (guess > 20) {
         alert("Put in a number between 1 and 20!")
     }
     //If their guess is smaller than the correct answer, they get an alert saying the correct number is higher
-    else if (guess < correctAnswer){
+    else if (guess < correctAnswer) {
         console.log("Higher!");
         alert("The number is higher!");
         var wrong = document.getElementById(guess);
         wrong.style.color = 'rgb(170, 0, 0)';
     }
     //If their guess is larger than the correct answer, they get an alert saying the number is lower
-    else if (guess > correctAnswer){
+    else if (guess > correctAnswer) {
         console.log("Lower!");
         alert("The number is lower!");
         wrong = document.getElementById(guess);

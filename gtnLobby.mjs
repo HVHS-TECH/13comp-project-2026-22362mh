@@ -1,6 +1,6 @@
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase,ref, set, get, remove, onValue  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
@@ -33,7 +33,7 @@ function fb_initialise() {
 }
 
 //Logging the user back in as a new html page loads
-function userAuthState(){
+function userAuthState() {
     const AUTH = getAuth();
     onAuthStateChanged(AUTH, (user) => {
         if (user) {
@@ -50,10 +50,10 @@ function userAuthState(){
 }
 
 //Getting the user's username from userData using their Uid
-function getUsername(){
+function getUsername() {
     console.log(userUid);
     var userNamePath = "/userData/" + userUid + "/Username";
-    const dbReference= ref(fb_gamedb, userNamePath);
+    const dbReference = ref(fb_gamedb, userNamePath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
@@ -70,10 +70,10 @@ function getUsername(){
 }
 
 //Inputting the user's uid and username in the waiting list for the GTN lobby
-function waitingList(){
+function waitingList() {
     var writePath = "/lobby/GTN/" + userUid;
     var dataToWrite = username;
-    const dbReference= ref(fb_gamedb, writePath);
+    const dbReference = ref(fb_gamedb, writePath);
     set(dbReference, dataToWrite).then(() => {
         console.log("User is in GTN lobby waiting list!");
     }).catch((error) => {
@@ -81,10 +81,10 @@ function waitingList(){
     });
 }
 
-function createLobby(){
+function createLobby() {
     var writePath = "gameRoom/GTN/" + userUid;
-    var dataToWrite = {"firstPlayer": userUid};
-    const dbReference= ref(fb_gamedb, writePath);
+    var dataToWrite = { "firstPlayer": userUid };
+    const dbReference = ref(fb_gamedb, writePath);
     set(dbReference, dataToWrite).then(() => {
         console.log("You have created a game room!");
         joinCode = userUid;
@@ -98,13 +98,13 @@ function createLobby(){
     });
 }
 
-function getGameRoomCode(){
+function getGameRoomCode() {
     var gameRoomCode = document.getElementById("gameRoomCode");
-    gameRoomCode = gameRoomCode.value; 
+    gameRoomCode = gameRoomCode.value;
     console.log(gameRoomCode);
 
     var readPath = "/gameRoom/GTN";
-    const dbReference= ref(fb_gamedb, readPath);
+    const dbReference = ref(fb_gamedb, readPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
@@ -119,7 +119,7 @@ function getGameRoomCode(){
     });
 }
 
-function leaveWaitingRoom(){
+function leaveWaitingRoom() {
     var deleteRecord = "/lobby/GTN/" + userUid;
     const dbReference2 = ref(fb_gamedb, deleteRecord);
     remove(dbReference2).then(() => {
