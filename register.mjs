@@ -2,40 +2,56 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-var username;
+let username;
+let userUid;
 
-function fb_initialise() {
-    const FB_GAMECONFIG = {
-        apiKey: "AIzaSyDuJnRiExxWkHuXgYW_9LpGaVLcfVYRIiE",
-        authDomain: "compgamefirebase-miohoffman.firebaseapp.com",
-        databaseURL: "https://compgamefirebase-miohoffman-default-rtdb.firebaseio.com",
-        projectId: "compgamefirebase-miohoffman",
-        storageBucket: "compgamefirebase-miohoffman.firebasestorage.app",
-        messagingSenderId: "879943944137",
-        appId: "1:879943944137:web:27014e6f84077c4b994a18",
-        measurementId: "G-2LQPB4K734"
-    };
+function fb_login() {
+    const AUTH = getAuth();
+    const PROVIDER = new GoogleAuthProvider();
+    // The following makes Google ask the user to select the account
+    PROVIDER.setCustomParameters({
+        prompt: 'select_account'
+    });
+    signInWithPopup(AUTH, PROVIDER).then((result) => {
+        console.log("Sign in successful!");
+        console.log(result);
 
-    const FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
-    fb_gamedb = getDatabase(FB_GAMEAPP);
-    console.info(fb_gamedb);
+        userUid = result.user.uid;
+        console.log(userUid);
+    })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 
-function fb_registerAccount(){
+function fb_getSignUpDetails() {
     var userAge = document.getElementById("userAge");
     userAge = userAge.value;
     console.log(userAge);
 
-    if (userAge < 13 || userAge > 100 || isNaN === true){
+    if (userAge < 13 || userAge > 100 || isNaN === true) {
         alert("Please put in an age between 13 and 100!");
     }
-    else{
+    else {
         username = document.getElementById("username");
         username = username.value;
         console.log(username);
+        storeSignUpDetails();
     }
 }
 
+function storeSignUpDetails() {
+    console.log(fb_gamedb);
+    var writePath2 = "/userData/" + userUid;
+    var data = { "Username": username };
+    const dbReference = ref(fb_gamedb, writePath2);
+    set(dbReference, data).then(() => {
+        console.log("Username has been stored");
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 export {
-    fb_registerAccount
+    fb_getSignUpDetails, fb_login
 }

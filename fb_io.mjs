@@ -43,47 +43,7 @@ function fb_initialise() {
     console.info(fb_gamedb);
 }
 
-//Has the user login with google
-function fb_login() {
-    const AUTH = getAuth();
-    const PROVIDER = new GoogleAuthProvider();
-    // The following makes Google ask the user to select the account
-    PROVIDER.setCustomParameters({
-        prompt: 'select_account'
-    });
-    signInWithPopup(AUTH, PROVIDER).then((result) => {
-        console.log("Sign in successful!");
-        console.log(result);
-        let loginStatus = document.getElementById("loginStatus");
-        loginStatus.innerHTML = "You have logged in!";
-
-        userUid = result.user.uid;
-        console.log(userUid);
-
-        signedIn = true;
-    })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-function storeUsername(){
-    //The path to the firebase is under Userdata and the value of the user's UID
-    var writePath = "/userData/" + userUid;
-    var data = {"Username": username};
-    const dbReference= ref(fb_gamedb, writePath);
-    set(dbReference, data).then(() => {
-        console.log("Username has been stored");
-        //Getting the gameSelection button from the html
-        var gameSelectionButton = document.getElementById("gameSelection");
-        //Making it appear on screen after the username is stored successfully
-        gameSelectionButton.style.display = "block";
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
 //Exporting the needed functions
 export {
-    fb_initialise, fb_login
+    fb_initialise
 }

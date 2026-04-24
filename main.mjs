@@ -9,12 +9,12 @@ import { fb_initialise }
     from './fb_io.mjs';
 window.fb_initialise = fb_initialise;
 
-import { fb_registerAccount }
+import { fb_getSignUpDetails }
     from './register.mjs';
-window.fb_registerAccount = fb_registerAccount;
+window.fb_getSignUpDetails = fb_getSignUpDetails;
 
 import { fb_login }
-    from './fb_io.mjs';
+    from './register.mjs';
 window.fb_login = fb_login;
 
 import { createLobby }
