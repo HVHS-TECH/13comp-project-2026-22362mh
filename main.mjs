@@ -17,6 +17,10 @@ import { fb_login }
     from './register.mjs';
 window.fb_login = fb_login;
 
+import { checkUserUids }
+    from './login.mjs';
+window.checkUserUids = checkUserUids;
+
 import { createLobby }
     from './gtnLobby.mjs';
 window.createLobby = createLobby;

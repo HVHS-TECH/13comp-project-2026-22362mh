@@ -64,5 +64,5 @@ function storeSignUpDetails() {
 }
 
 export {
-    fb_getSignUpDetails, fb_login
+    fb_getSignUpDetails, fb_login, userUid
 }
