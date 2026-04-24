@@ -1,9 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+import { fb_gamedb } from './fb_io.mjs';
 
 let username;
 let userUid;
+let userAge;
 
 function fb_login() {
     const AUTH = getAuth();
@@ -25,7 +28,7 @@ function fb_login() {
 }
 
 function fb_getSignUpDetails() {
-    var userAge = document.getElementById("userAge");
+    userAge = document.getElementById("userAge");
     userAge = userAge.value;
     console.log(userAge);
 
@@ -41,12 +44,20 @@ function fb_getSignUpDetails() {
 }
 
 function storeSignUpDetails() {
-    console.log(fb_gamedb);
-    var writePath2 = "/userData/" + userUid;
+    var writePath = "/userData/" + userUid;
     var data = { "Username": username };
-    const dbReference = ref(fb_gamedb, writePath2);
+    const dbReference = ref(fb_gamedb, writePath);
     set(dbReference, data).then(() => {
         console.log("Username has been stored");
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    var writePath2 = "/userData/" + userUid;
+    var userAgeData = {"userAge": userAge}; //Putting them in as second player for the turns
+    const dbReference2 = ref(fb_gamedb, writePath2);
+    update(dbReference2, userAgeData).then(() => {
+        console.log("User age has been stored!");
     }).catch((error) => {
         console.log(error);
     });

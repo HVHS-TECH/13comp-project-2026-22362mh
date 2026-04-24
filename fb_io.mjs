@@ -45,5 +45,5 @@ function fb_initialise() {
 
 //Exporting the needed functions
 export {
-    fb_initialise
+    fb_initialise, fb_gamedb
 }
