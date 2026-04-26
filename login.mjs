@@ -10,6 +10,7 @@ import { userUid } from './fb_io.mjs';
 import { fb_gamedb } from './fb_io.mjs';
 
 let accountMade = false;
+let username;
 
 //This function:
 //Checks all user uids stored in userData in firebase
@@ -36,6 +37,7 @@ function checkUserUids() {
 
             if (accountMade == true){
                 console.log("You have an account!");
+                getUserName();
             }
             else if (accountMade == false){
                 alert("You have not made an account yet! Please go to the register page and register an account.");
@@ -48,9 +50,33 @@ function checkUserUids() {
     });
 }
 
+function getUserName(){
+    var readPath = "/userData/" + userUid + "/Username";
+    const dbReference = ref(fb_gamedb, readPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            username = fb_data;
+            console.log(username);
+
+            let usernameDisplay = document.getElementById("usernameDisplay");
+            //usernameDisplay = usernameDisplay.value;
+            usernameDisplay.innerHTML = "Your username is: " + username;
+            usernameDisplay.style.display = "block";
+
+            let gameSelectionButton = document.getElementById("gameSelection");
+            gameSelectionButton.style.display = "block";
+        } else {
+            console.log("No record was found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 //Next step: go through the array of user uids, check if the user has already had their user uid stored for their username,
 //otherwise make them sign up.
 
 export {
-    checkUserUids
+    checkUserUids, username
 }

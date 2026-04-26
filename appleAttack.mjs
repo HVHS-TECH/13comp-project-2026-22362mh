@@ -175,8 +175,6 @@ function endGame(){
     textAlign(CENTER, CENTER);
     text("YOU DIED!", GAMEWIDTH/2, GAMEHEIGHT/2 - 40);
     text("Score: " + userScore, GAMEWIDTH/2, GAMEHEIGHT/2 + 10);
-
-    localStorage.setItem("appleAttackUserScore", userScore);
 }
 
 function difficulty(){
@@ -527,4 +525,10 @@ function walls(){
 	wallRH.color = 'brown';
 	wallTop.color = 'brown';
 	wallBot.color = 'brown';
+}
+
+//THE FOLLOWING CODE WAS WRITTEN IN TERM 2, 2026 by Mio Hoffman
+
+export {
+    userScore
 }

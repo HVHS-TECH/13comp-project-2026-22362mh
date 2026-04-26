@@ -45,6 +45,10 @@ label {
     display: none;
 }
 
+#usernameDisplay {
+    display: none;
+}
+
 body {
     background-color: rgb(153, 8, 32);
     color: rgb(245, 181, 172);

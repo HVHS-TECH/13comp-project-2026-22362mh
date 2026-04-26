@@ -55,6 +55,9 @@ function storeSignUpDetails() {
     }).catch((error) => {
         console.log(error);
     });
+
+    let gameSelectionButton = document.getElementById("gameSelection");
+    gameSelectionButton.style.display = "block";
 }
 
 //Exporting functions to be used in buttons
