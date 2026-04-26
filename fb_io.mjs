@@ -17,9 +17,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
+import { checkUserUids } from "./login.mjs";
+
 /***** GLOBAL VARIABLES *****/
 var fb_gamedb;
-var signedIn = false;
 var userUid;
 var username;
 
@@ -41,6 +42,25 @@ function fb_initialise() {
     console.info(fb_gamedb);
 }
 
+function fb_register() {
+    const AUTH = getAuth();
+    const PROVIDER = new GoogleAuthProvider();
+    // The following makes Google ask the user to select the account
+    PROVIDER.setCustomParameters({
+        prompt: 'select_account'
+    });
+    signInWithPopup(AUTH, PROVIDER).then((result) => {
+        console.log("Sign in successful!");
+        console.log(result);
+
+        userUid = result.user.uid;
+        console.log(userUid);
+    })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 function fb_login() {
     const AUTH = getAuth();
     const PROVIDER = new GoogleAuthProvider();
@@ -55,7 +75,7 @@ function fb_login() {
         userUid = result.user.uid;
         console.log(userUid);
 
-        signedIn = true;
+        checkUserUids();
     })
         .catch((error) => {
             console.log(error);
@@ -64,5 +84,5 @@ function fb_login() {
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb, fb_login, userUid, signedIn
+    fb_initialise, fb_gamedb, fb_register, fb_login, userUid
 }

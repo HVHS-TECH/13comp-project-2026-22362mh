@@ -6,10 +6,10 @@
 /************************************/
 /***** IMPORT FUNCTIONS *****/
 import { ref, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { userUid, signedIn } from './fb_io.mjs';
+import { userUid } from './fb_io.mjs';
 import { fb_gamedb } from './fb_io.mjs';
 
-let accountMade;
+let accountMade = false;
 
 //This function:
 //Checks all user uids stored in userData in firebase
@@ -25,6 +25,21 @@ function checkUserUids() {
             console.log(fb_data);
             var allUserUids = Object.keys(fb_data);
             console.log(allUserUids);
+
+            console.log(userUid);
+
+            for (let i=0; i<allUserUids.length; i++){
+                if (userUid == allUserUids[i]){
+                    accountMade = true;
+                }
+            }
+
+            if (accountMade == true){
+                console.log("You have an account!");
+            }
+            else if (accountMade == false){
+                alert("You have not made an account yet! Please go to the register page and register an account.");
+            }
         } else {
             console.log("No record was found");
         }

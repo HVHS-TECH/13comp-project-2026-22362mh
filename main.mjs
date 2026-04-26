@@ -13,13 +13,13 @@ import { fb_getSignUpDetails }
     from './register.mjs';
 window.fb_getSignUpDetails = fb_getSignUpDetails;
 
+import { fb_register }
+    from './fb_io.mjs';
+window.fb_register = fb_register;
+
 import { fb_login }
     from './fb_io.mjs';
 window.fb_login = fb_login;
-
-import { checkUserUids }
-    from './login.mjs';
-window.checkUserUids = checkUserUids;
 
 import { createLobby }
     from './gtnLobby.mjs';

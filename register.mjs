@@ -10,11 +10,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getDatabase, ref, set, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-import { fb_gamedb } from './fb_io.mjs';
+import { fb_gamedb, userUid } from './fb_io.mjs';
 
 //GLOBAL VARIABLES
 let username;
-let userUid;
 let userAge;
 
 function fb_getSignUpDetails() {
