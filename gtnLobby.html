@@ -10,12 +10,12 @@
     <title>Guess the Number Lobby</title>
 </head>
 
-<body>
+<body onload="fb_initialise(), userAuthState()">
     <h1>Guess the Number Lobby</h1>
 
     <h3 id="joinCode">You have successfully made a game lobby. Your code is: </h3>
 
-    <button onclick="fb_initialise(), createLobby()">Create Game Room</button>
+    <button onclick="createLobby()">Create Game Room</button>
 
     <h2>If you would like to enter someone's game room, please enter their code</h2>
     <label for="gameRoomCode">Code:</label><br><br>

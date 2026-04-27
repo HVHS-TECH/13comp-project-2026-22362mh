@@ -16,6 +16,7 @@ console.log('%c fb_io.mjs',
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 import { checkUserUids } from "./login.mjs";
 
@@ -82,7 +83,23 @@ function fb_login() {
         });
 }
 
+//Logging the user back in as a new html page loads
+function userAuthState() {
+    const AUTH = getAuth();
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            console.log("User is logged in!");
+            userUid = user.uid; //Getting back their user uid
+            console.log(userUid);
+        } else {
+            console.log("User is logged out!");
+        }
+    }, (error) => {
+        console.log(error);
+    });
+}
+
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb, fb_register, fb_login, userUid
+    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState
 }

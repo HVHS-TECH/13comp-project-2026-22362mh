@@ -21,6 +21,14 @@ import { fb_login }
     from './fb_io.mjs';
 window.fb_login = fb_login;
 
+import { userAuthState }
+    from './fb_io.mjs';
+window.userAuthState = userAuthState;
+
+import { getUsername }
+    from './gtnLobby.mjs';
+window.getUsername = getUsername;
+
 import { createLobby }
     from './gtnLobby.mjs';
 window.createLobby = createLobby;
