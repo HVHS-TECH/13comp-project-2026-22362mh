@@ -8,12 +8,29 @@
 // validates their guesses
 // alerts the user on how close their guess is to the correct number
 /************************************/
+import { ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+import { fb_gamedb } from "./fb_io.mjs";
+import { userUid } from "./fb_io.mjs";
 
 var correctAnswer;
+
+function gameStart(){
+    console.log("gameStart function");
+}
 
 function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
     console.log(correctAnswer);
+
+    var writePath = "/gameRoom/GTN/" + userUid;
+    var answerData = {"correctAnswer" : correctAnswer}
+    const dbReference= ref(fb_gamedb, writePath);
+    set(dbReference, answerData).then(() => {
+        console.log("Correct answer is in the database");
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 function getGuess() {
@@ -51,4 +68,6 @@ function getGuess() {
     }
 }
 
-getNumber();
+export {
+    gameStart, getNumber
+}

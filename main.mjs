@@ -36,3 +36,11 @@ window.createLobby = createLobby;
 import { getGameRoomCode }
     from './gtnLobby.mjs';
 window.getGameRoomCode = getGameRoomCode;
+
+import { getNumber }
+    from './gtn.mjs';
+window.getNumber = getNumber;
+
+import { gameStart }
+    from './gtn.mjs';
+window.gameStart = gameStart;

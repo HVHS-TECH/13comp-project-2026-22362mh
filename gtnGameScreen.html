@@ -8,11 +8,12 @@
     <title>GTN game screen</title>
 
 
-    <script src="gtn.mjs"></script>
+    <script type="module" src="gtn.mjs"></script>
+    <script type="module" src="main.mjs"></script>
 
 </head>
 
-<body>
+<body onload="fb_initialise(), userAuthState(), gameStart()">
     <h1>GTN game screen</h1>
 
     <div class="container">
