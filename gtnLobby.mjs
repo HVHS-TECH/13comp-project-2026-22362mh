@@ -5,7 +5,6 @@ import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-datab
 
 import { fb_gamedb } from "./fb_io.mjs";
 import { userUid } from "./fb_io.mjs";
-
 //GLOBAL VARIABLES
 var username;
 var joinCode;
@@ -28,6 +27,7 @@ function getUsername() {
     });
 }
 
+//This function makes a game room under the user's UID
 function createLobby() {
     getUsername();
     var gameRoomPath = "gameRoom/GTN/" + userUid;
@@ -37,6 +37,7 @@ function createLobby() {
         console.log("You have created a game room!");
         joinCode = userUid;
         leaveWaitingRoom();
+        checkGameRoomPlayers();
 
         var joinCodeDisplay = document.getElementById("joinCode");
         joinCodeDisplay.innerHTML = "You have successfully made a game room! Your join code is : " + joinCode;
@@ -61,15 +62,15 @@ function getGameRoomCode() {
             console.log(fb_data);
             var allGameRoomCodes = Object.keys(fb_data);
             console.log(allGameRoomCodes);
-            for (let i=0; i<allGameRoomCodes.length; i++){
-                if (gameRoomCode == allGameRoomCodes[i]){
+            for (let i = 0; i < allGameRoomCodes.length; i++) {
+                if (gameRoomCode == allGameRoomCodes[i]) {
                     codeValid = true;
                 }
             }
-            if (codeValid == true){
+            if (codeValid == true) {
                 joinGameRoom();
             }
-            else if (codeValid == false){
+            else if (codeValid == false) {
                 alert("The code you entered does not exist! Please enter a valid code.");
             }
         } else {
@@ -90,19 +91,83 @@ function leaveWaitingRoom() {
     });
 }
 
-function joinGameRoom(){
+function joinGameRoom() {
     getUsername();
     var gameRoomPath = "/gameRoom/GTN/" + gameRoomCode;
-    var secondPlayerData = { "secondPlayer" : userUid}; //Putting them in as second player for the turns
+    var secondPlayerData = { "secondPlayer": userUid }; //Putting them in as second player for the turns
     const dbReference3 = ref(fb_gamedb, gameRoomPath);
     update(dbReference3, secondPlayerData).then(() => {
         console.log("You are in the game room!");
+        leaveWaitingRoom();
+        checkGameRoomPlayers2();
     }).catch((error) => {
         console.log(error);
     });
 }
 
-function startGame(){
+function checkGameRoomPlayers() {
+    var readAndMonitorPath = "gameRoom/GTN/" + userUid;
+    const dbReference = ref(fb_gamedb, readAndMonitorPath);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            var readPath = "/gameRoom/GTN/" + userUid;
+            const dbReference = ref(fb_gamedb, readPath);
+            get(dbReference).then((snapshot) => {
+                var fb_data = snapshot.val();
+                if (fb_data != null) {
+                    console.log(fb_data);
+                    var players = Object.keys(fb_data);
+                    console.log(players);
+                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer'){
+                        console.log("Both players are in the game room!");
+                        window.location.href = "gtnGameScreen.html";
+                    }
+                } else {
+                    console.log("No record was found");
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            console.log("No record found");
+        }
+    });
+}
+
+function checkGameRoomPlayers2() {
+    var readAndMonitorPath = "gameRoom/GTN/" + gameRoomCode;
+    const dbReference = ref(fb_gamedb, readAndMonitorPath);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            var readPath = "/gameRoom/GTN/" + gameRoomCode;
+            const dbReference = ref(fb_gamedb, readPath);
+            get(dbReference).then((snapshot) => {
+                var fb_data = snapshot.val();
+                if (fb_data != null) {
+                    console.log(fb_data);
+                    var players = Object.keys(fb_data);
+                    console.log(players);
+                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer'){
+                        console.log("Both players are in the game room!");
+                        window.location.href = "gtnGameScreen.html";
+                    }
+                } else {
+                    console.log("No record was found");
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            console.log("No record found");
+        }
+    });
+}
+
+function startGame() {
     console.log("Start game");
 }
 
