@@ -24,22 +24,26 @@ function checkUserUids() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            var allUserUids = Object.keys(fb_data);
+            var allUserUids = Object.keys(fb_data); //Saves all registered user uids into an array
             console.log(allUserUids);
 
             console.log(userUid);
 
+            //Checks if the user's uid has been saved before
+            //If it has, they have made an account
+            //If it hasn't, they need to register
             for (let i=0; i<allUserUids.length; i++){
                 if (userUid == allUserUids[i]){
                     accountMade = true;
                 }
             }
 
+            //If the user has made an account, a function is called to get their username
             if (accountMade == true){
                 console.log("You have an account!");
                 getUserName();
             }
-            else if (accountMade == false){
+            else if (accountMade == false){ //If the user hasn't registered an account yet, they get an alert
                 alert("You have not made an account yet! Please go to the register page and register an account.");
             }
         } else {
@@ -50,6 +54,7 @@ function checkUserUids() {
     });
 }
 
+//This function gets the user's username to display to them
 function getUserName(){
     var readPath = "/userData/" + userUid + "/Username";
     const dbReference = ref(fb_gamedb, readPath);
@@ -59,11 +64,13 @@ function getUserName(){
             username = fb_data;
             console.log(username);
 
+            //Displaying the user's username using HTML
             let usernameDisplay = document.getElementById("usernameDisplay");
             //usernameDisplay = usernameDisplay.value;
             usernameDisplay.innerHTML = "Your username is: " + username;
             usernameDisplay.style.display = "block";
 
+            //After their username has been displayed, the button to go to the game selection page appears
             let gameSelectionButton = document.getElementById("gameSelection");
             gameSelectionButton.style.display = "block";
         } else {
@@ -74,9 +81,7 @@ function getUserName(){
     });
 }
 
-//Next step: go through the array of user uids, check if the user has already had their user uid stored for their username,
-//otherwise make them sign up.
-
+//EXPORT FUNCTIONS
 export {
     checkUserUids, username
 }

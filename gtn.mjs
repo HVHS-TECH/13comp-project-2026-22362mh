@@ -8,17 +8,23 @@
 // validates their guesses
 // alerts the user on how close their guess is to the correct number
 /************************************/
+
+//IMPORTING FIREBASE FUNCTIONS
 import { ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
+//IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
 import { userUid } from "./fb_io.mjs";
 
+//GLOBAL VARIABLES
 var correctAnswer;
 
 function gameStart(){
     console.log("gameStart function");
 }
 
+//This function generates the answer for the users to guess
+//It stores it into firebase so both users have the same number
 function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
     console.log(correctAnswer);
@@ -33,6 +39,7 @@ function getNumber() {
     });
 }
 
+//This function gets the user's guess from the html form and determines whether it is right or wrong
 function getGuess() {
     //Gets the user's guess from the html form
     var guess = document.getElementById("guess");
@@ -68,6 +75,7 @@ function getGuess() {
     }
 }
 
+//EXPORT FUNCTIONS
 export {
     gameStart, getNumber
 }

@@ -2,7 +2,7 @@
 // main.mjs
 //
 // Written by Mio Hoffman, Term 1, 2026
-//  imports functions to be used in html buttons
+//  imports functions to be used in html buttons or other modules
 /************************************/
 
 import { fb_initialise }
@@ -24,10 +24,6 @@ window.fb_login = fb_login;
 import { userAuthState }
     from './fb_io.mjs';
 window.userAuthState = userAuthState;
-
-import { getUsername }
-    from './gtnLobby.mjs';
-window.getUsername = getUsername;
 
 import { createLobby }
     from './gtnLobby.mjs';

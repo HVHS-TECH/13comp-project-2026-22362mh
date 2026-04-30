@@ -10,35 +10,18 @@ var username;
 var joinCode;
 var gameRoomCode;
 
-//Getting the user's username from userData using their Uid
-function getUsername() {
-    var userNamePath = "/userData/" + userUid + "/Username";
-    const dbReference = ref(fb_gamedb, userNamePath);
-    get(dbReference).then((snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            console.log(fb_data);
-            username = fb_data;
-        } else {
-            console.log("No record found");
-        }
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
 //This function makes a game room under the user's UID
 function createLobby() {
-    getUsername();
+    getFirstPlayerUsername();
     var gameRoomPath = "gameRoom/GTN/" + userUid;
     var dataToWrite = { "firstPlayer": userUid };
     const dbReference = ref(fb_gamedb, gameRoomPath);
     set(dbReference, dataToWrite).then(() => {
         console.log("You have created a game room!");
         joinCode = userUid;
-        leaveWaitingRoom();
-        checkGameRoomPlayers();
+        checkGameRoomPlayers(); //Calls a function to check when the game room updates so it can check for a second player
 
+        //Displays the user's join code for their game room
         var joinCodeDisplay = document.getElementById("joinCode");
         joinCodeDisplay.innerHTML = "You have successfully made a game room! Your join code is : " + joinCode;
         joinCodeDisplay.style.display = "block";
@@ -47,30 +30,38 @@ function createLobby() {
     });
 }
 
+//This function:
+//Gets the game room code the user inputted
+//Checks if it is an existing and valid game room code for any of the game rooms
+//Calls the joinGameRoom function if it is valid
+//Alerts the user that their code isn't valid if it isn't valid
 function getGameRoomCode() {
     var codeValid = false;
 
+    //Getting the game room code the user inputted into the html form.
     gameRoomCode = document.getElementById("gameRoomCode");
     gameRoomCode = gameRoomCode.value;
     console.log(gameRoomCode);
 
+    //Reading all the game room codes for Guess the Number
     var readPath = "/gameRoom/GTN";
     const dbReference = ref(fb_gamedb, readPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            var allGameRoomCodes = Object.keys(fb_data);
+            var allGameRoomCodes = Object.keys(fb_data); //Gets all the game room codes into an array
             console.log(allGameRoomCodes);
+            //This for loop checks if the game code inputted by the user matches any of the codes in the game room code array.
             for (let i = 0; i < allGameRoomCodes.length; i++) {
                 if (gameRoomCode == allGameRoomCodes[i]) {
                     codeValid = true;
                 }
             }
-            if (codeValid == true) {
+            if (codeValid == true) { //Calls this function if the inputted game code is valid
                 joinGameRoom();
             }
-            else if (codeValid == false) {
+            else if (codeValid == false) { //If the game code isn't valid, the user is alerted
                 alert("The code you entered does not exist! Please enter a valid code.");
             }
         } else {
@@ -81,31 +72,73 @@ function getGameRoomCode() {
     });
 }
 
-function leaveWaitingRoom() {
-    var deleteRecord = "/lobby/GTN/" + userUid;
-    const dbReference2 = ref(fb_gamedb, deleteRecord);
-    remove(dbReference2).then(() => {
-        console.log("You have been taken off the waiting list for GTN");
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
+//This function puts the user into the game room that matches the code they entered
 function joinGameRoom() {
-    getUsername();
+    getSecondPlayerUsername();
     var gameRoomPath = "/gameRoom/GTN/" + gameRoomCode;
     var secondPlayerData = { "secondPlayer": userUid }; //Putting them in as second player for the turns
     const dbReference3 = ref(fb_gamedb, gameRoomPath);
     update(dbReference3, secondPlayerData).then(() => {
         console.log("You are in the game room!");
-        leaveWaitingRoom();
-        checkGameRoomPlayers2();
+        checkGameRoomPlayers2(); //Calls a function to check if two players are in the same game room the user is in
     }).catch((error) => {
         console.log(error);
     });
 }
 
+//Getting the user's username from userData using their Uid
+function getFirstPlayerUsername() {
+    var userNamePath = "/userData/" + userUid + "/Username";
+    const dbReference = ref(fb_gamedb, userNamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            username = fb_data;
+            var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid;
+            var usernameData = {"firstPlayerUsername" : username};
+            const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
+            update(dbReference, usernameData).then(() => {
+                console.log("Username is stored into game room!");
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            console.log("No record found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+//Getting the user's username from userData using their Uid
+function getSecondPlayerUsername() {
+    var userNamePath = "/userData/" + userUid + "/Username";
+    const dbReference = ref(fb_gamedb, userNamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            username = fb_data;
+            var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode;
+            var usernameData = {"secondPlayerUsername" : username};
+            const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
+            update(dbReference, usernameData).then(() => {
+                console.log("Username is stored into game room!");
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            console.log("No record found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+//This function checks if two people are in the game room the user is in if they created the game room
 function checkGameRoomPlayers() {
+    //Checking the room every time it updates
     var readAndMonitorPath = "gameRoom/GTN/" + userUid;
     const dbReference = ref(fb_gamedb, readAndMonitorPath);
     onValue(dbReference, (snapshot) => {
@@ -120,7 +153,8 @@ function checkGameRoomPlayers() {
                     console.log(fb_data);
                     var players = Object.keys(fb_data);
                     console.log(players);
-                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer'){
+                    //Checks if there is a first player and second player in the game room so the user can go to the game screen
+                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer') {
                         console.log("Both players are in the game room!");
                         window.location.href = "gtnGameScreen.html";
                     }
@@ -136,7 +170,9 @@ function checkGameRoomPlayers() {
     });
 }
 
+//This function checks if two people are in the game room the user is in if they joined a game room
 function checkGameRoomPlayers2() {
+    //Checking the room every time it updates
     var readAndMonitorPath = "gameRoom/GTN/" + gameRoomCode;
     const dbReference = ref(fb_gamedb, readAndMonitorPath);
     onValue(dbReference, (snapshot) => {
@@ -151,7 +187,8 @@ function checkGameRoomPlayers2() {
                     console.log(fb_data);
                     var players = Object.keys(fb_data);
                     console.log(players);
-                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer'){
+                    //Checks if there is a first player and second player in the game room so the user can go to the game screen
+                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer') {
                         console.log("Both players are in the game room!");
                         window.location.href = "gtnGameScreen.html";
                     }
@@ -167,10 +204,7 @@ function checkGameRoomPlayers2() {
     });
 }
 
-function startGame() {
-    console.log("Start game");
-}
-
+//EXPORTING FUNCTIONS
 export {
-    createLobby, getGameRoomCode, getUsername
+    createLobby, getGameRoomCode
 }
