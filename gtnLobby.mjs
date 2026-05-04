@@ -3,8 +3,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
+/***** IMPORTING VARIABLES *****/
 import { fb_gamedb } from "./fb_io.mjs";
 import { userUid } from "./fb_io.mjs";
+
 //GLOBAL VARIABLES
 var username;
 var joinCode;
@@ -95,8 +97,8 @@ function getFirstPlayerUsername() {
         if (fb_data != null) {
             console.log(fb_data);
             username = fb_data;
-            var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid;
-            var usernameData = {"firstPlayerUsername" : username};
+            var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid; //Path for the game room
+            var usernameData = {"firstPlayerUsername" : username}; //Username data to write into the game room
             const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
             update(dbReference, usernameData).then(() => {
                 console.log("Username is stored into game room!");
@@ -120,8 +122,8 @@ function getSecondPlayerUsername() {
         if (fb_data != null) {
             console.log(fb_data);
             username = fb_data;
-            var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode;
-            var usernameData = {"secondPlayerUsername" : username};
+            var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
+            var usernameData = {"secondPlayerUsername" : username}; //Username data to write into it
             const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
             update(dbReference, usernameData).then(() => {
                 console.log("Username is stored into game room!");
@@ -145,6 +147,8 @@ function checkGameRoomPlayers() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
+
+            //Reading the game room to check if there are two players in it
             var readPath = "/gameRoom/GTN/" + userUid;
             const dbReference = ref(fb_gamedb, readPath);
             get(dbReference).then((snapshot) => {
@@ -154,13 +158,14 @@ function checkGameRoomPlayers() {
                     var players = Object.keys(fb_data);
                     console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
-                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer') {
+                    if (players[0] == 'firstPlayer' && players[2] == 'secondPlayer') {
                         console.log("Both players are in the game room!");
-                        window.location.href = "gtnGameScreen.html";
+                        window.location.href = "gtnGameScreen.html"; //Changing screen to the game screen
                     }
                 } else {
                     console.log("No record was found");
                 }
+
             }).catch((error) => {
                 console.log(error);
             });
@@ -179,6 +184,8 @@ function checkGameRoomPlayers2() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
+
+            //Reading the game room to check if two players are in it
             var readPath = "/gameRoom/GTN/" + gameRoomCode;
             const dbReference = ref(fb_gamedb, readPath);
             get(dbReference).then((snapshot) => {
@@ -195,6 +202,7 @@ function checkGameRoomPlayers2() {
                 } else {
                     console.log("No record was found");
                 }
+
             }).catch((error) => {
                 console.log(error);
             });

@@ -25,6 +25,10 @@ import { userAuthState }
     from './fb_io.mjs';
 window.userAuthState = userAuthState;
 
+import { userAuthStateThenStart }
+    from './fb_io.mjs';
+window.userAuthStateThenStart = userAuthStateThenStart;
+
 import { createLobby }
     from './gtnLobby.mjs';
 window.createLobby = createLobby;

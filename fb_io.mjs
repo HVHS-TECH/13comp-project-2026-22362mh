@@ -99,7 +99,23 @@ function userAuthState() {
     });
 }
 
+function userAuthStateThenStart() {
+    const AUTH = getAuth();
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            console.log("User is logged in!");
+            userUid = user.uid; //Getting back their user uid
+            console.log(userUid);
+            gameStart();
+        } else {
+            console.log("User is logged out!");
+        }
+    }, (error) => {
+        console.log(error);
+    });
+}
+
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState
+    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState, userAuthStateThenStart
 }

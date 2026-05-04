@@ -10,7 +10,7 @@
 /************************************/
 
 //IMPORTING FIREBASE FUNCTIONS
-import { ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
@@ -20,7 +20,27 @@ import { userUid } from "./fb_io.mjs";
 var correctAnswer;
 
 function gameStart(){
-    console.log("gameStart function");
+    console.log("gameStart");
+
+    var playerPath = "gameRoom/GTN/" + userUid + "/firstPlayer";
+    const dbReference= ref(fb_gamedb, playerPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            if (fb_data == userUid){
+                console.log("User is first player!");
+                getNumber();
+            }
+            else {
+                console.log("You are not the first player!");
+            }
+        } else {
+            console.log("No record found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 //This function generates the answer for the users to guess
@@ -29,11 +49,11 @@ function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
     console.log(correctAnswer);
 
-    var writePath = "/gameRoom/GTN/" + userUid;
-    var answerData = {"correctAnswer" : correctAnswer}
-    const dbReference= ref(fb_gamedb, writePath);
-    set(dbReference, answerData).then(() => {
-        console.log("Correct answer is in the database");
+    var correctAnswerData = {"correctAnswer" : correctAnswer}
+    var correctAnswerPath = "gameRoom/GTN/" + userUid;
+    const dbReference= ref(fb_gamedb, correctAnswerPath);
+    update(dbReference, correctAnswerData ).then(() => {
+        console.log("Correct number is in the database!");
     }).catch((error) => {
         console.log(error);
     });
