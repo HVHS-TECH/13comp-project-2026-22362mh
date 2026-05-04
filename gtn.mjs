@@ -33,12 +33,9 @@ function gameStart(){
                 getNumber();
                 firstPlayerTurn();
             }
-            else {
-                console.log("You are not the first player!");
-                notSecondPlayerTurn();
-            }
         } else {
-            console.log("No record found");
+            console.log("You are not the first player!");
+            notSecondPlayerTurn();
         }
     }).catch((error) => {
         console.log(error);
