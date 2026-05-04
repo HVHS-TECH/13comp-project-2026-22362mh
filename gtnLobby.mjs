@@ -195,7 +195,7 @@ function checkGameRoomPlayers2() {
                     var players = Object.keys(fb_data);
                     console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
-                    if (players[0] == 'firstPlayer' && players[1] == 'secondPlayer') {
+                    if (players[0] == 'firstPlayer' && players[2] == 'secondPlayer') {
                         console.log("Both players are in the game room!");
                         window.location.href = "gtnGameScreen.html";
                     }
