@@ -65,7 +65,7 @@ function firstPlayerTurn(){
 
 function notSecondPlayerTurn(){
     var guessDisplay = document.getElementById("guessDisplay");
-    guessDisplay.style.display = none;
+    guessDisplay.style.display = "none";
 }
 
 //This function gets the user's guess from the html form and determines whether it is right or wrong
