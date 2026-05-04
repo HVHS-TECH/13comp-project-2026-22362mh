@@ -177,6 +177,9 @@ function checkGameRoomPlayers() {
 
 //This function checks if two people are in the game room the user is in if they joined a game room
 function checkGameRoomPlayers2() {
+    var firstPlayerIn = false;
+    var secondPlayerIn = false;
+
     //Checking the room every time it updates
     var readAndMonitorPath = "gameRoom/GTN/" + gameRoomCode;
     const dbReference = ref(fb_gamedb, readAndMonitorPath);
@@ -195,8 +198,15 @@ function checkGameRoomPlayers2() {
                     var players = Object.keys(fb_data);
                     console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
-                    if (players[0] == 'firstPlayer' && players[2] == 'secondPlayer' || players[1] == 'firstPlayer' && players[3] == 'secondPlayer') {
-                        console.log("Both players are in the game room!");
+                    for (let i=0; i < players.length; i++){
+                        if (players[i] == "firstPlayer"){
+                            firstPlayerIn = true;
+                        }
+                        else if (players [i] == "secondPlayer"){
+                            secondPlayerIn = true;
+                        }
+                    }
+                    if (firstPlayerIn == true && secondPlayerIn == true){
                         window.location.href = "gtnGameScreen.html";
                     }
                 } else {
