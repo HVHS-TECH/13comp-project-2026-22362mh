@@ -31,9 +31,11 @@ function gameStart(){
             if (fb_data == userUid){
                 console.log("User is first player!");
                 getNumber();
+                firstPlayerTurn();
             }
             else {
                 console.log("You are not the first player!");
+                notSecondPlayerTurn();
             }
         } else {
             console.log("No record found");
@@ -57,6 +59,16 @@ function getNumber() {
     }).catch((error) => {
         console.log(error);
     });
+}
+
+function firstPlayerTurn(){
+    var guessDisplay = document.getElementById("guessDisplay");
+    guessDisplay.style.display = "block";
+}
+
+function notSecondPlayerTurn(){
+    var guessDisplay = document.getElementById("guessDisplay");
+    guessDisplay.style.display = none;
 }
 
 //This function gets the user's guess from the html form and determines whether it is right or wrong
