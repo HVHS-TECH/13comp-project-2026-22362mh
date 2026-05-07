@@ -15,9 +15,11 @@ import { ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.1
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
 import { userUid } from "./fb_io.mjs";
+import { gameRoomCode } from "./gtnLobby.mjs";
 
 //GLOBAL VARIABLES
 var correctAnswer;
+var gameRoomID;
 
 function gameStart(){
     console.log("gameStart");
@@ -30,12 +32,14 @@ function gameStart(){
             console.log(fb_data);
             if (fb_data == userUid){
                 console.log("User is first player!");
+                gameRoomID = userUid;
                 getNumber();
-                firstPlayerTurn();
+                yourTurn();
             }
         } else {
             console.log("You are not the first player!");
-            notSecondPlayerTurn();
+            gameRoomID = gameRoomCode;
+            notYourTurn();
         }
     }).catch((error) => {
         console.log(error);
@@ -58,12 +62,27 @@ function getNumber() {
     });
 }
 
-function firstPlayerTurn(){
+function checkPlayerTurn(){
+    var playerPath = "/gameRoom/GTN/" + gameRoomID + "/pLayerTurn";
+    const dbReference= ref(fb_gamedb, playerPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log("Player turn: " + fb_data);
+        } else {
+            console.log("No record found");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+function yourTurn(){
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "block";
 }
 
-function notSecondPlayerTurn(){
+function notYourTurn(){
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "none";
 }
@@ -102,6 +121,8 @@ function getGuess() {
         wrong = document.getElementById(guess);
         wrong.style.color = 'rgb(170, 0, 0)';
     }
+
+    notYourTurn();
 }
 
 //EXPORT FUNCTIONS

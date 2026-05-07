@@ -30,6 +30,15 @@ function createLobby() {
     }).catch((error) => {
         console.log(error);
     });
+
+    var firstPlayerTurn = {"playerTurn": "first"};
+    var writePath = "gameRoom/GTN/" + userUid;
+    const dbReference2= ref(fb_gamedb, writePath);
+    update(dbReference2, firstPlayerTurn ).then(() => {
+        console.log("Update successful");
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 //This function:
@@ -140,6 +149,9 @@ function getSecondPlayerUsername() {
 
 //This function checks if two people are in the game room the user is in if they created the game room
 function checkGameRoomPlayers() {
+    var firstPlayerIn = false;
+    var secondPlayerIn = false;
+
     //Checking the room every time it updates
     var readAndMonitorPath = "gameRoom/GTN/" + userUid;
     const dbReference = ref(fb_gamedb, readAndMonitorPath);
@@ -158,9 +170,16 @@ function checkGameRoomPlayers() {
                     var players = Object.keys(fb_data);
                     console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
-                    if (players[0] == 'firstPlayer' && players[2] == 'secondPlayer') {
-                        console.log("Both players are in the game room!");
-                        window.location.href = "gtnGameScreen.html"; //Changing screen to the game screen
+                    for (let i=0; i < players.length; i++){
+                        if (players[i] == "firstPlayer"){
+                            firstPlayerIn = true;
+                        }
+                        else if (players [i] == "secondPlayer"){
+                            secondPlayerIn = true;
+                        }
+                    }
+                    if (firstPlayerIn == true && secondPlayerIn == true){
+                        window.location.href = "gtnGameScreen.html";
                     }
                 } else {
                     console.log("No record was found");
