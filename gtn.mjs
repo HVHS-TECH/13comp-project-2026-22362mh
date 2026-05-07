@@ -21,6 +21,11 @@ import { gameRoomCode } from "./gtnLobby.mjs";
 var correctAnswer;
 var gameRoomID;
 
+//This function:
+//Gets the first player to generate a correct answer which stores in firebase
+//Allows the first player to guess first
+//Doesn't allow the second player to guess at the start
+//Assigns the gameRoomID to the same data but in differing ways based on whether or not the player is the first player or not
 function gameStart(){
     console.log("gameStart");
 
@@ -52,6 +57,7 @@ function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
     console.log(correctAnswer);
 
+    //Writing the correct answer into the database so both players have the same answer
     var correctAnswerData = {"correctAnswer" : correctAnswer}
     var correctAnswerPath = "gameRoom/GTN/" + userUid;
     const dbReference= ref(fb_gamedb, correctAnswerPath);
@@ -62,6 +68,7 @@ function getNumber() {
     });
 }
 
+//This function checks which player's turn it is by reading the variable in the gameRoom that says whether it's the first or second player's turn
 function checkPlayerTurn(){
     var playerPath = "/gameRoom/GTN/" + gameRoomID + "/pLayerTurn";
     const dbReference= ref(fb_gamedb, playerPath);
@@ -77,11 +84,13 @@ function checkPlayerTurn(){
     });
 }
 
+//This function allows the user to guess if it is their turn
 function yourTurn(){
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "block";
 }
 
+//This function hides the form to guess if it is not their turn so they cannot guess
 function notYourTurn(){
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "none";
@@ -122,7 +131,7 @@ function getGuess() {
         wrong.style.color = 'rgb(170, 0, 0)';
     }
 
-    notYourTurn();
+    notYourTurn(); //After the player guesses, their turn is over
 }
 
 //EXPORT FUNCTIONS

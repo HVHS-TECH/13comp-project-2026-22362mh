@@ -243,5 +243,5 @@ function checkGameRoomPlayers2() {
 
 //EXPORTING FUNCTIONS
 export {
-    createLobby, getGameRoomCode
+    createLobby, getGameRoomCode, gameRoomCode
 }
