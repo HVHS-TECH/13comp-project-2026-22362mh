@@ -70,7 +70,7 @@ function getNumber() {
 
 //This function checks which player's turn it is by reading the variable in the gameRoom that says whether it's the first or second player's turn
 function checkPlayerTurn(){
-    var playerPath = "/gameRoom/GTN/" + gameRoomID + "/pLayerTurn";
+    var playerPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     const dbReference= ref(fb_gamedb, playerPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
