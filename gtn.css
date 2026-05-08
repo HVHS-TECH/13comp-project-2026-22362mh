@@ -32,6 +32,19 @@ button:hover {
     background-color:rgb(221, 240, 232);
 }
 
+#gameRoomCode {
+    font-size: 30px;
+    background-color:rgb(222, 252, 255)
+}
+
+#submit {
+    background-color:rgb(161, 216, 193);
+    font-size: 40px;
+    font-family: Impact;
+    color:rgb(16, 88, 94);
+    margin-top: 20px;
+}
+
 .container {
     display: flex;
     justify-content: space-around;
