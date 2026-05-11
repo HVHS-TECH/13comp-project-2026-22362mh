@@ -22,9 +22,12 @@ h2 {
 button {
     color: rgb(16, 88, 94);
     background-color: rgb(161, 216, 193);
-    font-size: 80px;
-    margin: 90px;
+    font-size: 60px;
+    margin-top: 50px;
     font-family: Impact;
+    border-style: groove;
+    border-width: 10px;
+    border-color:rgb(81, 122, 126);
 }
 
 button:hover {

@@ -44,3 +44,7 @@ window.getNumber = getNumber;
 import { gameStart }
     from './gtn.mjs';
 window.gameStart = gameStart;
+
+import { getGuess }
+    from './gtn.mjs';
+window.getGuess = getGuess;

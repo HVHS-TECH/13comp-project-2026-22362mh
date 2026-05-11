@@ -10,7 +10,7 @@
 /************************************/
 
 //IMPORTING FIREBASE FUNCTIONS
-import { ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
@@ -26,25 +26,25 @@ var gameRoomID;
 //Allows the first player to guess first
 //Doesn't allow the second player to guess at the start
 //Assigns the gameRoomID to the same data but in differing ways based on whether or not the player is the first player or not
-function gameStart(){
+function gameStart() {
     console.log("gameStart");
 
     var playerPath = "gameRoom/GTN/" + userUid + "/firstPlayer";
-    const dbReference= ref(fb_gamedb, playerPath);
+    const dbReference = ref(fb_gamedb, playerPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            if (fb_data == userUid){
+            if (fb_data == userUid) {
                 console.log("User is first player!");
                 gameRoomID = userUid;
                 getNumber();
-                yourTurn();
+                checkFirstPlayerTurn();
             }
         } else {
             console.log("You are not the first player!");
             gameRoomID = gameRoomCode;
-            notYourTurn();
+            checkSecondPlayerTurn();
         }
     }).catch((error) => {
         console.log(error);
@@ -58,10 +58,10 @@ function getNumber() {
     console.log(correctAnswer);
 
     //Writing the correct answer into the database so both players have the same answer
-    var correctAnswerData = {"correctAnswer" : correctAnswer}
+    var correctAnswerData = { "correctAnswer": correctAnswer }
     var correctAnswerPath = "gameRoom/GTN/" + userUid;
-    const dbReference= ref(fb_gamedb, correctAnswerPath);
-    update(dbReference, correctAnswerData ).then(() => {
+    const dbReference = ref(fb_gamedb, correctAnswerPath);
+    update(dbReference, correctAnswerData).then(() => {
         console.log("Correct number is in the database!");
     }).catch((error) => {
         console.log(error);
@@ -69,15 +69,72 @@ function getNumber() {
 }
 
 //This function checks which player's turn it is by reading the variable in the gameRoom that says whether it's the first or second player's turn
-function checkPlayerTurn(){
-    var playerPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
-    const dbReference= ref(fb_gamedb, playerPath);
+function checkFirstPlayerTurn() {
+    console.log("gameRoomID: " + gameRoomID);
+    var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
+    const dbReference = ref(fb_gamedb, monitorPath);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            if (fb_data == "first") {
+                yourTurn();
+            }
+            else if (fb_data == "second"){
+                notYourTurn();
+            }
+        } else {
+            console.log("No record found!");
+        }
+    });
+}
+
+function checkSecondPlayerTurn() {
+    var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
+    const dbReference = ref(fb_gamedb, monitorPath);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            if (fb_data == "second") {
+                yourTurn();
+            }
+            else if (fb_data == "first"){
+                notYourTurn();
+            }
+        } else {
+            console.log("No record found!");
+        }
+    });
+}
+
+function switchPlayerTurn() {
+    var playerTurnPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
+    const dbReference = ref(fb_gamedb, playerTurnPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log("Player turn: " + fb_data);
+            console.log(fb_data);
+            if (fb_data == "first") {
+                var second = {playerTurn: "second"};
+                const dbReference = ref(fb_gamedb, playerTurnPath);
+                update(dbReference, second).then(() => {
+                    console.log("It is now the SECOND player's turn!");
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+            else if (fb_data == "second") {
+                var first = {playerTurn: "first"};
+                const dbReference = ref(fb_gamedb, playerTurnPath);
+                update(dbReference, first).then(() => {
+                    console.log("It is now the FIRST player's turn!");
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
         } else {
-            console.log("No record found");
+            console.log("No record found!");
         }
     }).catch((error) => {
         console.log(error);
@@ -85,13 +142,13 @@ function checkPlayerTurn(){
 }
 
 //This function allows the user to guess if it is their turn
-function yourTurn(){
+function yourTurn() {
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "block";
 }
 
 //This function hides the form to guess if it is not their turn so they cannot guess
-function notYourTurn(){
+function notYourTurn() {
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "none";
 }
@@ -131,10 +188,10 @@ function getGuess() {
         wrong.style.color = 'rgb(170, 0, 0)';
     }
 
-    notYourTurn(); //After the player guesses, their turn is over
+    switchPlayerTurn();
 }
 
 //EXPORT FUNCTIONS
 export {
-    gameStart, getNumber
+    gameStart, getNumber, getGuess
 }
