@@ -76,7 +76,6 @@ function checkFirstPlayerTurn() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            fb_data = fb_data.playerTurn;
             if (fb_data == 'first') {
                 yourTurn();
             }
@@ -112,6 +111,7 @@ function checkSecondPlayerTurn() {
 
 function switchPlayerTurn() {
     var playerTurnPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
+    var updatePath = "/gameRoom/GTN/" + gameRoomID;
     const dbReference = ref(fb_gamedb, playerTurnPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
@@ -119,7 +119,7 @@ function switchPlayerTurn() {
             console.log(fb_data);
             if (fb_data == "first") {
                 var second = {playerTurn: "second"};
-                const dbReference = ref(fb_gamedb, playerTurnPath);
+                const dbReference = ref(fb_gamedb, updatePath);
                 update(dbReference, second).then(() => {
                     console.log("It is now the SECOND player's turn!");
                 }).catch((error) => {
@@ -128,7 +128,7 @@ function switchPlayerTurn() {
             }
             else if (fb_data == "second") {
                 var first = {playerTurn: "first"};
-                const dbReference = ref(fb_gamedb, playerTurnPath);
+                const dbReference = ref(fb_gamedb, updatePath);
                 update(dbReference, first).then(() => {
                     console.log("It is now the FIRST player's turn!");
                 }).catch((error) => {
