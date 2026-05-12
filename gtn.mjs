@@ -70,17 +70,18 @@ function getNumber() {
 
 //This function checks which player's turn it is by reading the variable in the gameRoom that says whether it's the first or second player's turn
 function checkFirstPlayerTurn() {
-    console.log("gameRoomID: " + gameRoomID);
     var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     const dbReference = ref(fb_gamedb, monitorPath);
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            if (fb_data == "first") {
+            fb_data = fb_data.playerTurn;
+            if (fb_data == 'first') {
                 yourTurn();
             }
-            else if (fb_data == "second"){
+            else if (fb_data == 'second'){
+                console.log("It's not your turn!");
                 notYourTurn();
             }
         } else {
@@ -96,6 +97,7 @@ function checkSecondPlayerTurn() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
+            fb_data = fb_data.playerTurn;
             if (fb_data == "second") {
                 yourTurn();
             }
