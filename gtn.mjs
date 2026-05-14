@@ -43,11 +43,10 @@ function gameStart() {
             }
         } else {
             console.log("You are not the first player!");
-            gameRoomID = gameRoomCode;
             checkSecondPlayerTurn();
         }
     }).catch((error) => {
-        console.log(error);
+        console.log(error); 
     });
 }
 
@@ -59,7 +58,7 @@ function getNumber() {
 
     //Writing the correct answer into the database so both players have the same answer
     var correctAnswerData = { "correctAnswer": correctAnswer }
-    var correctAnswerPath = "gameRoom/GTN/" + userUid;
+    var correctAnswerPath = "/gameRoom/GTN/" + userUid;
     const dbReference = ref(fb_gamedb, correctAnswerPath);
     update(dbReference, correctAnswerData).then(() => {
         console.log("Correct number is in the database!");
@@ -90,6 +89,7 @@ function checkFirstPlayerTurn() {
 }
 
 function checkSecondPlayerTurn() {
+    console.log(gameRoomID);
     var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     const dbReference = ref(fb_gamedb, monitorPath);
     onValue(dbReference, (snapshot) => {
