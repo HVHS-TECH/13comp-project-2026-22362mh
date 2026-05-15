@@ -44,6 +44,9 @@ function checkUserUids() {
                 getUserName();
             }
             else if (accountMade == false){ //If the user hasn't registered an account yet, they get an alert
+                let registerButton = document.getElementById("registerButton");
+                registerButton.style.display = "block";
+
                 alert("You have not made an account yet! Please go to the register page and register an account.");
             }
         } else {

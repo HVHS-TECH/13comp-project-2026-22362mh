@@ -56,6 +56,10 @@ label {
     display: none;
 }
 
+#registerButton {
+    display: none;
+}
+
 body {
     background-color: rgb(141, 10, 31);
     color: rgb(245, 181, 172);
