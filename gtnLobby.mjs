@@ -226,6 +226,7 @@ function checkGameRoomPlayers2() {
                         }
                     }
                     if (firstPlayerIn == true && secondPlayerIn == true){
+                        sessionStorage.setItem("gameRoomCode", gameRoomCode);
                         window.location.href = "gtnGameScreen.html";
                     }
                 } else {
@@ -243,5 +244,5 @@ function checkGameRoomPlayers2() {
 
 //EXPORTING FUNCTIONS
 export {
-    createLobby, getGameRoomCode, gameRoomCode
+    createLobby, getGameRoomCode
 }

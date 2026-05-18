@@ -15,7 +15,6 @@ import { ref, set, get, update, onValue } from "https://www.gstatic.com/firebase
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
 import { userUid } from "./fb_io.mjs";
-import { gameRoomCode } from "./gtnLobby.mjs";
 
 //GLOBAL VARIABLES
 var correctAnswer;
@@ -42,6 +41,7 @@ function gameStart() {
                 checkFirstPlayerTurn();
             }
         } else {
+            let gameRoomID = sessionStorage.getItem("gameRoomCode");
             console.log("You are not the first player!");
             checkSecondPlayerTurn();
         }
