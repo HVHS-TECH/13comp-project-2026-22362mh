@@ -41,8 +41,9 @@ function gameStart() {
                 checkFirstPlayerTurn();
             }
         } else {
-            let gameRoomID = sessionStorage.getItem("gameRoomCode");
+            gameRoomID = sessionStorage.getItem("gameRoomCode");
             console.log("You are not the first player!");
+            getCorrectAnswer();
             checkSecondPlayerTurn();
         }
     }).catch((error) => {
@@ -62,6 +63,22 @@ function getNumber() {
     const dbReference = ref(fb_gamedb, correctAnswerPath);
     update(dbReference, correctAnswerData).then(() => {
         console.log("Correct number is in the database!");
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+function getCorrectAnswer(){
+    var readPath = "/gameRoom/GTN/" + gameRoomID + "/correctAnswer";
+    const dbReference= ref(fb_gamedb, readPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            correctAnswer = fb_data;
+        } else {
+            console.log("No record found!");
+        }
     }).catch((error) => {
         console.log(error);
     });
@@ -96,7 +113,6 @@ function checkSecondPlayerTurn() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            fb_data = fb_data.playerTurn;
             if (fb_data == "second") {
                 yourTurn();
             }
