@@ -19,6 +19,7 @@ import { userUid } from "./fb_io.mjs";
 //GLOBAL VARIABLES
 var correctAnswer;
 var gameRoomID;
+var whichPlayer;
 
 //This function:
 //Gets the first player to generate a correct answer which stores in firebase
@@ -37,17 +38,20 @@ function gameStart() {
             if (fb_data == userUid) {
                 console.log("User is first player!");
                 gameRoomID = userUid;
+                whichPlayer = "first";
                 getNumber();
                 checkFirstPlayerTurn();
             }
         } else {
             gameRoomID = sessionStorage.getItem("gameRoomCode");
+            console.log(gameRoomID);
             console.log("You are not the first player!");
+            whichPlayer = "second";
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
     }).catch((error) => {
-        console.log(error); 
+        console.log(error);
     });
 }
 
@@ -68,9 +72,9 @@ function getNumber() {
     });
 }
 
-function getCorrectAnswer(){
+function getCorrectAnswer() {
     var readPath = "/gameRoom/GTN/" + gameRoomID + "/correctAnswer";
-    const dbReference= ref(fb_gamedb, readPath);
+    const dbReference = ref(fb_gamedb, readPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
@@ -95,7 +99,7 @@ function checkFirstPlayerTurn() {
             if (fb_data == 'first') {
                 yourTurn();
             }
-            else if (fb_data == 'second'){
+            else if (fb_data == 'second') {
                 console.log("It's not your turn!");
                 notYourTurn();
             }
@@ -116,7 +120,7 @@ function checkSecondPlayerTurn() {
             if (fb_data == "second") {
                 yourTurn();
             }
-            else if (fb_data == "first"){
+            else if (fb_data == "first") {
                 notYourTurn();
             }
         } else {
@@ -134,7 +138,7 @@ function switchPlayerTurn() {
         if (fb_data != null) {
             console.log(fb_data);
             if (fb_data == "first") {
-                var second = {playerTurn: "second"};
+                var second = { playerTurn: "second" };
                 const dbReference = ref(fb_gamedb, updatePath);
                 update(dbReference, second).then(() => {
                     console.log("It is now the SECOND player's turn!");
@@ -143,7 +147,7 @@ function switchPlayerTurn() {
                 });
             }
             else if (fb_data == "second") {
-                var first = {playerTurn: "first"};
+                var first = { playerTurn: "first" };
                 const dbReference = ref(fb_gamedb, updatePath);
                 update(dbReference, first).then(() => {
                     console.log("It is now the FIRST player's turn!");
@@ -181,7 +185,8 @@ function getGuess() {
     //If the user guesses the correct answer, they get an alert saying they've got it right
     if (guess == correctAnswer) {
         console.log("You got it right!");
-        alert("You got it right!");
+        window.location.href = "gtnWinScreen.html";
+        whoWon();
     }
     //If their guess is zero or a negative number, they get an alert
     else if (guess <= 0) {
@@ -207,6 +212,28 @@ function getGuess() {
     }
 
     switchPlayerTurn();
+}
+
+function whoWon() {
+    var playerWhoWonPath = "/gameRoom/GTN/" + gameRoomID;
+    if (whichPlayer = "first") {
+        let playerWhoWon = { "playerWhoWon": "first" };
+        const dbReference = ref(fb_gamedb, playerWhoWonPath);
+        update(dbReference, playerWhoWon).then(() => {
+            console.log("First player won!");
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    else if (whichPlayer = "second") {
+        let playerWhoWon = { "playerWhoWon": "second" };
+        const dbReference = ref(fb_gamedb, playerWhoWonPath);
+        update(dbReference, playerWhoWon).then(() => {
+            console.log("Second player won!");
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 }
 
 //EXPORT FUNCTIONS
