@@ -36,17 +36,17 @@ function gameStart() {
         if (fb_data != null) {
             console.log(fb_data);
             if (fb_data == userUid) {
-                console.log("User is first player!");
                 gameRoomID = userUid;
                 whichPlayer = "first";
+                console.log("You are the " + whichPlayer + " player!");
                 getNumber();
                 checkFirstPlayerTurn();
             }
         } else {
             gameRoomID = sessionStorage.getItem("gameRoomCode");
             console.log(gameRoomID);
-            console.log("You are not the first player!");
             whichPlayer = "second";
+            console.log("You are the " + whichPlayer + " player!");
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
@@ -165,6 +165,7 @@ function switchPlayerTurn() {
 
 //This function allows the user to guess if it is their turn
 function yourTurn() {
+    checkIfYouLost();
     var guessDisplay = document.getElementById("guessDisplay");
     guessDisplay.style.display = "block";
 }
@@ -185,8 +186,8 @@ function getGuess() {
     //If the user guesses the correct answer, they get an alert saying they've got it right
     if (guess == correctAnswer) {
         console.log("You got it right!");
-        window.location.href = "gtnWinScreen.html";
         whoWon();
+        window.location.href = "gtnWinScreen.html";
     }
     //If their guess is zero or a negative number, they get an alert
     else if (guess <= 0) {
@@ -216,7 +217,7 @@ function getGuess() {
 
 function whoWon() {
     var playerWhoWonPath = "/gameRoom/GTN/" + gameRoomID;
-    if (whichPlayer = "first") {
+    if (whichPlayer == "first") {
         let playerWhoWon = { "playerWhoWon": "first" };
         const dbReference = ref(fb_gamedb, playerWhoWonPath);
         update(dbReference, playerWhoWon).then(() => {
@@ -225,7 +226,7 @@ function whoWon() {
             console.log(error);
         });
     }
-    else if (whichPlayer = "second") {
+    else if (whichPlayer == "second") {
         let playerWhoWon = { "playerWhoWon": "second" };
         const dbReference = ref(fb_gamedb, playerWhoWonPath);
         update(dbReference, playerWhoWon).then(() => {
@@ -234,6 +235,26 @@ function whoWon() {
             console.log(error);
         });
     }
+}
+
+function checkIfYouLost(){
+    console.log("Checking if you lost...");
+    let checkWinningPlayerPath = "/gameRoom/GTN/" + gameRoomID + "/playerWhoWon";
+    const dbReference = ref(fb_gamedb, checkWinningPlayerPath);
+    onValue(dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            if (fb_data == "first" && whichPlayer == "second"){
+                window.location.href = "gtnLoseScreen.html";
+            }
+            if (fb_data == "second" && whichPlayer == "first"){
+                window.location.href = "gtnLoseScreen.html";
+            }
+        } else {
+            console.log("No record found!");
+        }
+    });
 }
 
 //EXPORT FUNCTIONS
