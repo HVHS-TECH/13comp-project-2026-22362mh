@@ -18,6 +18,7 @@ import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
+import { registeredAlready} from "./register.mjs";
 import { checkUserUids } from "./login.mjs";
 
 /***** GLOBAL VARIABLES *****/
@@ -56,6 +57,7 @@ function fb_register() {
 
         userUid = result.user.uid;
         console.log(userUid);
+        registeredAlready();
     })
         .catch((error) => {
             console.log(error);

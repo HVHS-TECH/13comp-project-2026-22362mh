@@ -7,14 +7,39 @@
 /************************************/
 //IMPORTING FUNCTIONS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-import { fb_gamedb, userUid } from './fb_io.mjs';
+import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
 
 //GLOBAL VARIABLES
 let username;
 let userAge;
+let userRegistered;
+
+function registeredAlready(){
+    let userUidsPath = "/userData";
+    const dbReference= ref(fb_gamedb, userUidsPath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            let userUids = Object.keys(fb_data);
+            console.log(userUids);
+            const MAX = userUids.length
+            for (let i=0; i<MAX; i++){
+                if (userUids = userUid){
+                    userRegistered = true;
+                    sessionStorage.setItem(userRegistered);
+                    location.href="login.html";
+                }
+            }
+        } else {
+            console.log("No record found!");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
 
 function fb_getSignUpDetails() {
     userAge = document.getElementById("userAge"); //Getting the user age from the register form
@@ -62,5 +87,5 @@ function storeSignUpDetails() {
 
 //Exporting functions to be used in buttons
 export {
-    fb_getSignUpDetails
+    fb_getSignUpDetails, registeredAlready, userRegistered
 }

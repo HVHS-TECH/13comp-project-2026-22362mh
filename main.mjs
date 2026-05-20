@@ -14,12 +14,16 @@ import { fb_getSignUpDetails }
 window.fb_getSignUpDetails = fb_getSignUpDetails;
 
 import { fb_register }
-    from './fb_io.mjs';
+    from "./fb_io.mjs";
 window.fb_register = fb_register;
 
 import { fb_login }
     from './fb_io.mjs';
 window.fb_login = fb_login;
+
+import { userAlreadyRegistered }
+    from "./login.mjs";
+window.userAlreadyRegistered = userAlreadyRegistered;
 
 import { userAuthState }
     from './fb_io.mjs';

@@ -72,6 +72,7 @@ function getNumber() {
     });
 }
 
+//Second player getting the correct answer from the database
 function getCorrectAnswer() {
     var readPath = "/gameRoom/GTN/" + gameRoomID + "/correctAnswer";
     const dbReference = ref(fb_gamedb, readPath);
@@ -88,7 +89,8 @@ function getCorrectAnswer() {
     });
 }
 
-//This function checks which player's turn it is by reading the variable in the gameRoom that says whether it's the first or second player's turn
+//This function checks if it's the first player's turn
+//It does this by reading the playerTurn key in the database
 function checkFirstPlayerTurn() {
     var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     const dbReference = ref(fb_gamedb, monitorPath);
@@ -96,12 +98,12 @@ function checkFirstPlayerTurn() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            if (fb_data == 'first') {
-                yourTurn();
+            if (fb_data == 'first') { //If firebase says it's the first player's turn...
+                yourTurn(); //The turn function is called
             }
-            else if (fb_data == 'second') {
+            else if (fb_data == 'second') { //If it's actually the second player's turn...
                 console.log("It's not your turn!");
-                notYourTurn();
+                notYourTurn(); //The function for when it's not the user's turn gets called.
             }
         } else {
             console.log("No record found!");
@@ -109,6 +111,8 @@ function checkFirstPlayerTurn() {
     });
 }
 
+//This function checks if it's the second player's turn
+//It does this by reading the playerTurn key in the database
 function checkSecondPlayerTurn() {
     console.log(gameRoomID);
     var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
@@ -129,26 +133,27 @@ function checkSecondPlayerTurn() {
     });
 }
 
+//This function switches which player's turn it is once a player finishes their turn
 function switchPlayerTurn() {
     var playerTurnPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     var updatePath = "/gameRoom/GTN/" + gameRoomID;
-    const dbReference = ref(fb_gamedb, playerTurnPath);
+    const dbReference = ref(fb_gamedb, playerTurnPath); //It's reading the playerTurn key in firebase
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            if (fb_data == "first") {
-                var second = { playerTurn: "second" };
-                const dbReference = ref(fb_gamedb, updatePath);
+            if (fb_data == "first") { //If it was the first player's turn
+                var second = { playerTurn: "second" }; 
+                const dbReference = ref(fb_gamedb, updatePath); //The computer updates the playerTurn to be the second player's turn
                 update(dbReference, second).then(() => {
                     console.log("It is now the SECOND player's turn!");
                 }).catch((error) => {
                     console.log(error);
                 });
             }
-            else if (fb_data == "second") {
+            else if (fb_data == "second") { //If it was the second player's turn
                 var first = { playerTurn: "first" };
-                const dbReference = ref(fb_gamedb, updatePath);
+                const dbReference = ref(fb_gamedb, updatePath); //The computer updates the playerTurn to be the first player's turn
                 update(dbReference, first).then(() => {
                     console.log("It is now the FIRST player's turn!");
                 }).catch((error) => {
@@ -212,9 +217,12 @@ function getGuess() {
         wrong.style.color = 'rgb(170, 0, 0)';
     }
 
-    switchPlayerTurn();
+    switchPlayerTurn(); // After the player has inputted a guess, the computer switches whose turn it is
 }
 
+//This function inputs the player who won into the database
+//It gets called when a player guesses the correct answer
+//The whichPlayer variable is read to see if the user who won was the first or second player
 function whoWon() {
     var playerWhoWonPath = "/gameRoom/GTN/" + gameRoomID;
     if (whichPlayer == "first") {
@@ -237,6 +245,7 @@ function whoWon() {
     }
 }
 
+//This function checks which player lost by using an onValue listener
 function checkIfYouLost(){
     console.log("Checking if you lost...");
     let checkWinningPlayerPath = "/gameRoom/GTN/" + gameRoomID + "/playerWhoWon";

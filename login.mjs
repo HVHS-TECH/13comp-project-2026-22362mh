@@ -9,8 +9,17 @@ import { ref, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-dat
 import { userUid } from './fb_io.mjs';
 import { fb_gamedb } from './fb_io.mjs';
 
+import { userRegistered } from "./register.mjs"
+
 let accountMade = false;
 let username;
+
+function userAlreadyRegistered(){
+    sessionStorage.getItem(userRegistered);
+    if (userRegistered == true){
+        alert("Hello! You have already registered! Please login here!");
+    }
+}
 
 //This function:
 //Checks all user uids stored in userData in firebase
@@ -86,5 +95,5 @@ function getUserName(){
 
 //EXPORT FUNCTIONS
 export {
-    checkUserUids, username
+    checkUserUids, username, userAlreadyRegistered
 }
