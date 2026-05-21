@@ -2,97 +2,35 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { ref, set, query, orderByChild, limitToLast, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { ref, set, query, orderByChild, limitToFirst, get, child } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 import { userUid } from "./fb_io.mjs";
 import { userScore as appleAttackScore } from "./appleAttack.mjs";
-import { username as userName} from "./login.mjs";
+import { username as userName } from "./login.mjs"
 
-const FB_GAMECONFIG = {
-        apiKey: "AIzaSyDuJnRiExxWkHuXgYW_9LpGaVLcfVYRIiE",
-        authDomain: "compgamefirebase-miohoffman.firebaseapp.com",
-        databaseURL: "https://compgamefirebase-miohoffman-default-rtdb.firebaseio.com",
-        projectId: "compgamefirebase-miohoffman",
-        storageBucket: "compgamefirebase-miohoffman.firebasestorage.app",
-        messagingSenderId: "879943944137",
-        appId: "1:879943944137:web:27014e6f84077c4b994a18",
-        measurementId: "G-2LQPB4K734"
-    };
+import { fb_gamedb, fb_initialise } from "./fb_io.mjs";
 
-const COL_C = 'white';	    // These two const are part of the coloured
-const COL_B = '#CD7F32';	//  console.log for functions scheme
-console.log('%c fb_io.mjs',
-            'color: blue; background-color: white;');
-
-var FB_GAMEDB
 let uid;
-
-function fb_initialise() {
-    console.log('%c fb_initialise(): ', 
-                'color: ' + COL_C + '; background-color: ' + COL_B + ';');
-                
-                const FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
-                FB_GAMEDB  = getDatabase(FB_GAMEAPP);
-                console.info(FB_GAMEDB);  
-                
-                const app = initializeApp(FB_GAMECONFIG);
-                const analytics = getAnalytics(app);
-}
-
 fb_initialise();
 
-function appleAttackScoreRec(){
-    const appleAttackScorePath = "gameScores/" + userUid + "/appleAttack/score";
-    var reference = ref(FB_GAMEDB, appleAttackScorePath);
-    set(reference, appleAttackScore).then(() => {
-        console.log("Userscore write rec for Apple Attack successful");
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
-appleAttackScoreRec();
-
-function aa_readSorted(){
-    const whereToReadFrom = "gameScores";
-    const sortkey = "appleAttack/score";
-    const numberToRead = 5;
-
-    const reference = query(ref(FB_GAMEDB, whereToReadFrom), orderByChild(sortkey), limitToLast(numberToRead));
-    get(reference).then((snapshot) => {
+function aa_readSorted() {
+    let AppleAttackGameScores = "/gameScores/appleAttack"
+    let numberToRead = 5;
+    let sortkey = "score"
+    const dbReference = query(ref(fb_gamedb, AppleAttackGameScores), orderByChild(sortkey),
+        limitToFirst(numberToRead));
+    get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
-        console.log(fb_data);
-      if (fb_data != null) {
-            console.log("Sort read success");
-            const finalScore = [];
-            //Following code was written by ChatGPT
-            snapshot.forEach(childSnap => {
-                const entry = childSnap.child("appleAttack").val(); // {score, userName}
-                finalScore.push(entry);
-            });
-            finalScore.reverse();
-            //End of code written by Chatgpt
-
-            var firstPlace = document.getElementById("first_place");
-            firstPlace.innerHTML = "1. " + finalScore[0].userName + ": " + finalScore[0].score;
-
-            var secondPlace = document.getElementById("second_place");
-            secondPlace.innerHTML = "2. " + finalScore[1].userName + ": " + finalScore[1].score;
-
-            var thirdPlace = document.getElementById("third_place");
-            thirdPlace.innerHTML = "3. " + finalScore[2].userName + ": " + finalScore[2].score;
-
-            var fourthPlace = document.getElementById("fourth_place");
-            fourthPlace.innerHTML = "4. " + finalScore[3].userName + ": " + finalScore[3].score;
-
-            var fifthPlace = document.getElementById("fifth_place");
-            fifthPlace.innerHTML = "5. " + finalScore[4].userName + ": " + finalScore[4].score;
+        if (fb_data != null) {
+            console.log(fb_data);
         } else {
-            console.log("Success: Record not found");
+            console.log("No record found");
         }
     }).catch((error) => {
         console.log(error);
     });
 }
 
-aa_readSorted();
+export {
+    aa_readSorted
+}

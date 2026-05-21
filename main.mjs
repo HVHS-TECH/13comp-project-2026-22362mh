@@ -21,10 +21,6 @@ import { fb_login }
     from './fb_io.mjs';
 window.fb_login = fb_login;
 
-import { userAlreadyRegistered }
-    from "./login.mjs";
-window.userAlreadyRegistered = userAlreadyRegistered;
-
 import { userAuthState }
     from './fb_io.mjs';
 window.userAuthState = userAuthState;
@@ -52,3 +48,7 @@ window.gameStart = gameStart;
 import { getGuess }
     from './gtn.mjs';
 window.getGuess = getGuess;
+
+import { aa_readSorted }
+    from './appleAttackScores.mjs';
+window.aa_readSorted = aa_readSorted;

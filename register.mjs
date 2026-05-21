@@ -29,7 +29,6 @@ function registeredAlready(){
             for (let i=0; i<MAX; i++){
                 if (userUids = userUid){
                     userRegistered = true;
-                    sessionStorage.setItem(userRegistered);
                     location.href="login.html";
                 }
             }

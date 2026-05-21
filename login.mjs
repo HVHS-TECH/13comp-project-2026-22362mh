@@ -14,13 +14,6 @@ import { userRegistered } from "./register.mjs"
 let accountMade = false;
 let username;
 
-function userAlreadyRegistered(){
-    sessionStorage.getItem(userRegistered);
-    if (userRegistered == true){
-        alert("Hello! You have already registered! Please login here!");
-    }
-}
-
 //This function:
 //Checks all user uids stored in userData in firebase
 //Checks if the user's uid is one of them
@@ -95,5 +88,5 @@ function getUserName(){
 
 //EXPORT FUNCTIONS
 export {
-    checkUserUids, username, userAlreadyRegistered
+    checkUserUids, username
 }

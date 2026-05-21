@@ -8,8 +8,8 @@
   <meta name="author" content="Mio Hoffman">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="form.mjs" type="module"></script>
-  <script src="appleAttackScores.mjs" type="module"></script>
+  <script type="module" src="./appleAttackScores.mjs"></script>
+  <script type="module" src="./main.mjs"></script>
   <link rel="stylesheet" href="appleAttack.css">
   
 </head>
@@ -17,7 +17,7 @@
 <!--***************************************************
   BODY
 ****************************************************-->
-<body>
+<body onload="aa_readSorted()">
   <h1>Apple Attack Leaderboard</h1>
   <p id="first_place">1. </p>
   <p id="second_place">2. </p>
