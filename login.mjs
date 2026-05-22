@@ -9,10 +9,17 @@ import { ref, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-dat
 import { userUid } from './fb_io.mjs';
 import { fb_gamedb } from './fb_io.mjs';
 
-import { userRegistered } from "./register.mjs"
-
 let accountMade = false;
 let username;
+
+function alreadyRegistered(){
+    let userRegistered = sessionStorage.getItem("userRegistered");
+    console.log(userRegistered);
+    if (userRegistered == true){
+        console.log("If function is activated");
+        alert("It seems you've already been registered before! Please login with the same email below.");
+    }
+}
 
 //This function:
 //Checks all user uids stored in userData in firebase
@@ -88,5 +95,5 @@ function getUserName(){
 
 //EXPORT FUNCTIONS
 export {
-    checkUserUids, username
+    checkUserUids, username, alreadyRegistered
 }

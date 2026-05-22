@@ -15,7 +15,6 @@ import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
 //GLOBAL VARIABLES
 let username;
 let userAge;
-let userRegistered;
 
 function registeredAlready(){
     let userUidsPath = "/userData";
@@ -28,7 +27,8 @@ function registeredAlready(){
             const MAX = userUids.length
             for (let i=0; i<MAX; i++){
                 if (userUids = userUid){
-                    userRegistered = true;
+                    let userRegistered = true;
+                    sessionStorage.setItem("userRegistered", userRegistered);
                     location.href="login.html";
                 }
             }
@@ -86,5 +86,5 @@ function storeSignUpDetails() {
 
 //Exporting functions to be used in buttons
 export {
-    fb_getSignUpDetails, registeredAlready, userRegistered
+    fb_getSignUpDetails, registeredAlready
 }

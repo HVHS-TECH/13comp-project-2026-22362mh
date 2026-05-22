@@ -17,8 +17,7 @@ function aa_readSorted() {
     let AppleAttackGameScores = "/gameScores/appleAttack"
     let numberToRead = 5;
     let sortkey = "score"
-    const dbReference = query(ref(fb_gamedb, AppleAttackGameScores), orderByChild(sortkey),
-        limitToFirst(numberToRead));
+    const dbReference = query(ref(fb_gamedb, AppleAttackGameScores), orderByChild(sortkey), limitToFirst(numberToRead));
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {

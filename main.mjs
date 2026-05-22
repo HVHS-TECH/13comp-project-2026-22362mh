@@ -17,6 +17,10 @@ import { fb_register }
     from "./fb_io.mjs";
 window.fb_register = fb_register;
 
+import { alreadyRegistered }
+    from './login.mjs';
+window.alreadyRegistered = alreadyRegistered;
+
 import { fb_login }
     from './fb_io.mjs';
 window.fb_login = fb_login;
