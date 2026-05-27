@@ -20,6 +20,7 @@ import { userUid } from "./fb_io.mjs";
 var correctAnswer;
 var gameRoomID;
 var whichPlayer;
+var score = 0;
 
 //This function:
 //Gets the first player to generate a correct answer which stores in firebase
@@ -183,6 +184,7 @@ function notYourTurn() {
 
 //This function gets the user's guess from the html form and determines whether it is right or wrong
 function getGuess() {
+    score = score + 1;
     //Gets the user's guess from the html form
     var guess = document.getElementById("guess");
     guess = guess.value;
@@ -192,6 +194,7 @@ function getGuess() {
     if (guess == correctAnswer) {
         console.log("You got it right!");
         whoWon();
+        storeUserScore();
         window.location.href = "gtnWinScreen.html";
     }
     //If their guess is zero or a negative number, they get an alert
@@ -263,6 +266,19 @@ function checkIfYouLost(){
         } else {
             console.log("No record found!");
         }
+    });
+}
+
+function storeUserScore(){
+    //Get the user's username
+
+    let gtnGameScoresPath = "/gameScores/GTN";
+    let userScoreData = 
+    const dbReference= ref(game_db, gtnGameScoresPath);
+    update(dbReference, userScoreData).then(() => {
+        console.log("User score is saved!");
+    }).catch((error) => {
+        console.log(error);
     });
 }
 
