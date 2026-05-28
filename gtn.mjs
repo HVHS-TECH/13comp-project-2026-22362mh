@@ -270,12 +270,24 @@ function checkIfYouLost(){
 }
 
 function storeUserScore(){
-    //Get the user's username
+    var userNamePath = "/userData/" + userUid + "/Username";
+    const dbReference= ref(fb_gamedb, userNamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            let username = fb_data;
+        } else {
+            console.log("Username was not found!");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 
     let gtnGameScoresPath = "/gameScores/GTN";
-    let userScoreData = 
-    const dbReference= ref(game_db, gtnGameScoresPath);
-    update(dbReference, userScoreData).then(() => {
+    let userScoreData = {[username] : score};
+    const dbReference2= ref(game_db, gtnGameScoresPath);
+    update(dbReference2, userScoreData).then(() => {
         console.log("User score is saved!");
     }).catch((error) => {
         console.log(error);
