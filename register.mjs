@@ -16,20 +16,26 @@ import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
 let username;
 let userAge;
 
+/**** Registered Already Function ****/
+//This function checks if the user has already registered
+//It gets all the userUids in the database under userData
+//Checks if the user's uid is one of them
+//Sends them to the login page if their user uid does match one of the uids already in the database
+//Or it does nothing if the user uid isn't in the database already
 function registeredAlready(){
     let userUidsPath = "/userData";
     const dbReference= ref(fb_gamedb, userUidsPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            let userUids = Object.keys(fb_data);
+            let userUids = Object.keys(fb_data); //Getting all the user uids in an array because all the user uids are keys under userData
             console.log(userUids);
-            const MAX = userUids.length
+            const MAX = userUids.length //Max value for the for loop
             for (let i=0; i<MAX; i++){
                 if (userUids = userUid){
                     let userRegistered = true;
-                    sessionStorage.setItem("userRegistered", userRegistered);
-                    location.href="login.html";
+                    sessionStorage.setItem("userRegistered", userRegistered); //A variable for the login page;
+                    location.href="login.html"; //Sends the user to the login page
                 }
             }
         } else {
@@ -40,6 +46,10 @@ function registeredAlready(){
     });
 }
 
+/***** Get Sign Up Details From HTML Form *****/
+//This function validates the user age and user name that the user inputs
+//If either aren't valid, it sends an alert to the user telling them of the conditions for the user name and age to be valid
+//If both the user name and age are valid, it calls another function to store the details under userData in firebase
 function fb_getSignUpDetails() {
     userAge = document.getElementById("userAge"); //Getting the user age from the register form
     userAge = userAge.value;

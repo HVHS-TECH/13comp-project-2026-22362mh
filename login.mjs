@@ -2,7 +2,6 @@
 // login.mjs
 //
 // Written by Mio Hoffman, Term 2, 2026
-// checkUserUids: checks if the user's uid has already been stored in firebase (meaning they've already registered)
 /************************************/
 /***** IMPORT FUNCTIONS *****/
 import { ref, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";

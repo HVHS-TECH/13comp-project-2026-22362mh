@@ -194,7 +194,8 @@ function checkGameRoomPlayers() {
     });
 }
 
-//This function checks if two people are in the game room the user is in if they joined a game room
+/***** Check Game Room Players 2 function*****/
+//This function is essentially identical to checkGameRoomPlayers function
 function checkGameRoomPlayers2() {
     var firstPlayerIn = false;
     var secondPlayerIn = false;

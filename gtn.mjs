@@ -274,8 +274,8 @@ function storeUserScore() {
         if (fb_data != null) {
             username = fb_data;
             console.log("Username is: " + username);
-            let gtnGameScoresPath = "/gameScores/GTN";
-            let userScoreData = { [username]: score };
+            let gtnGameScoresPath = "/gameScores/GTN/" + username;
+            let userScoreData = { "score": score };
             const dbReference2 = ref(fb_gamedb, gtnGameScoresPath);
             update(dbReference2, userScoreData).then(() => {
                 console.log("User score is saved!");

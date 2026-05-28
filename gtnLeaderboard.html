@@ -4,12 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="main.mjs"></script>
     <link rel="stylesheet" href="gtn.css">
     <title>GTN Leaderboard</title>
 </head>
 
-<body>
+<body onload="fb_initialise(), gtn_readSorted()">
     <h1>GTN leaderboard</h1>
+    <p id="first_place">1. </p>
+    <p id="second_place">2. </p>
+    <p id="third_place">3. </p>
+    <p id="fourth_place">4. </p>
+    <p id="fifth_place">5. </p>
+
+    <br><button onclick="gameSelection.html">Game Selection</button>
 </body>
 
 </html>
