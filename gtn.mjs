@@ -103,7 +103,6 @@ function checkFirstPlayerTurn() {
                 yourTurn(); //The turn function is called
             }
             else if (fb_data == 'second') { //If it's actually the second player's turn...
-                console.log("It's not your turn!");
                 notYourTurn(); //The function for when it's not the user's turn gets called.
             }
         } else {
@@ -144,10 +143,9 @@ function switchPlayerTurn() {
         if (fb_data != null) {
             console.log(fb_data);
             if (fb_data == "first") { //If it was the first player's turn
-                var second = { playerTurn: "second" }; 
+                var second = { playerTurn: "second" };
                 const dbReference = ref(fb_gamedb, updatePath); //The computer updates the playerTurn to be the second player's turn
                 update(dbReference, second).then(() => {
-                    console.log("It is now the SECOND player's turn!");
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -156,7 +154,6 @@ function switchPlayerTurn() {
                 var first = { playerTurn: "first" };
                 const dbReference = ref(fb_gamedb, updatePath); //The computer updates the playerTurn to be the first player's turn
                 update(dbReference, first).then(() => {
-                    console.log("It is now the FIRST player's turn!");
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -195,7 +192,6 @@ function getGuess() {
         console.log("You got it right!");
         whoWon();
         storeUserScore();
-        window.location.href = "gtnWinScreen.html";
     }
     //If their guess is zero or a negative number, they get an alert
     else if (guess <= 0) {
@@ -249,7 +245,7 @@ function whoWon() {
 }
 
 //This function checks which player lost by using an onValue listener
-function checkIfYouLost(){
+function checkIfYouLost() {
     console.log("Checking if you lost...");
     let checkWinningPlayerPath = "/gameRoom/GTN/" + gameRoomID + "/playerWhoWon";
     const dbReference = ref(fb_gamedb, checkWinningPlayerPath);
@@ -257,10 +253,10 @@ function checkIfYouLost(){
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            if (fb_data == "first" && whichPlayer == "second"){
+            if (fb_data == "first" && whichPlayer == "second") {
                 window.location.href = "gtnLoseScreen.html";
             }
-            if (fb_data == "second" && whichPlayer == "first"){
+            if (fb_data == "second" && whichPlayer == "first") {
                 window.location.href = "gtnLoseScreen.html";
             }
         } else {
@@ -269,26 +265,27 @@ function checkIfYouLost(){
     });
 }
 
-function storeUserScore(){
+function storeUserScore() {
+    let username;
     var userNamePath = "/userData/" + userUid + "/Username";
-    const dbReference= ref(fb_gamedb, userNamePath);
+    const dbReference = ref(fb_gamedb, userNamePath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
-            let username = fb_data;
+            username = fb_data;
+            console.log("Username is: " + username);
+            let gtnGameScoresPath = "/gameScores/GTN";
+            let userScoreData = { [username]: score };
+            const dbReference2 = ref(fb_gamedb, gtnGameScoresPath);
+            update(dbReference2, userScoreData).then(() => {
+                console.log("User score is saved!");
+                window.location="gtnWinScreen.html";
+            }).catch((error) => {
+                console.log(error);
+            });
         } else {
             console.log("Username was not found!");
         }
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    let gtnGameScoresPath = "/gameScores/GTN";
-    let userScoreData = {[username] : score};
-    const dbReference2= ref(game_db, gtnGameScoresPath);
-    update(dbReference2, userScoreData).then(() => {
-        console.log("User score is saved!");
     }).catch((error) => {
         console.log(error);
     });
