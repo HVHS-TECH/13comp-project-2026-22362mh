@@ -10,7 +10,7 @@
 /************************************/
 
 //IMPORTING FIREBASE FUNCTIONS
-import { ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
@@ -254,9 +254,11 @@ function checkIfYouLost() {
         if (fb_data != null) {
             console.log(fb_data);
             if (fb_data == "first" && whichPlayer == "second") {
+                gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }
             if (fb_data == "second" && whichPlayer == "first") {
+                gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }
         } else {
@@ -279,13 +281,25 @@ function storeUserScore() {
             const dbReference2 = ref(fb_gamedb, gtnGameScoresPath);
             update(dbReference2, userScoreData).then(() => {
                 console.log("User score is saved!");
-                window.location="gtnWinScreen.html";
+                window.location = "gtnWinScreen.html";
             }).catch((error) => {
                 console.log(error);
             });
         } else {
             console.log("Username was not found!");
         }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+//This function deletes the lobby when the game is done
+//It gets called after a user wins and a user loses
+function gameDone() {
+    var deleteLobbyPath = "/gameRoom/GTN/" + gameRoomID;
+    const dbReference= ref(fb_gamedb, deleteLobbyPath);
+    remove(dbReference).then(() => {
+        console.log("Lobby has been deleted!");
     }).catch((error) => {
         console.log(error);
     });
