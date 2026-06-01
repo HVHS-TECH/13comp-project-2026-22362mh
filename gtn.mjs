@@ -267,6 +267,7 @@ function checkIfYouLost() {
     });
 }
 
+//This function stores the user's score under their username in gameScores
 function storeUserScore() {
     let username;
     var userNamePath = "/userData/" + userUid + "/Username";
