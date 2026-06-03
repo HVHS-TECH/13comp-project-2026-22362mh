@@ -40,6 +40,10 @@ function gameStart() {
                 gameRoomID = userUid;
                 whichPlayer = "first";
                 console.log("You are the " + whichPlayer + " player!");
+                
+                var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
+                onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
+                
                 getNumber();
                 checkFirstPlayerTurn();
             }
@@ -48,6 +52,10 @@ function gameStart() {
             console.log(gameRoomID);
             whichPlayer = "second";
             console.log("You are the " + whichPlayer + " player!");
+
+            var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
+            onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
+            
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
