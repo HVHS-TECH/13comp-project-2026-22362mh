@@ -10,7 +10,7 @@
 /************************************/
 
 //IMPORTING FIREBASE FUNCTIONS
-import { ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { ref, set, get, update, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
@@ -40,10 +40,8 @@ function gameStart() {
                 gameRoomID = userUid;
                 whichPlayer = "first";
                 console.log("You are the " + whichPlayer + " player!");
-                
-                var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
-                onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
-                
+
+                disconnect();
                 getNumber();
                 checkFirstPlayerTurn();
             }
@@ -53,15 +51,18 @@ function gameStart() {
             whichPlayer = "second";
             console.log("You are the " + whichPlayer + " player!");
 
-            var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
-            onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
-            
+            disconnect();
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
     }).catch((error) => {
         console.log(error);
     });
+}
+
+function disconnect() {
+    var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
+    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
 }
 
 //This function generates the answer for the users to guess
@@ -306,7 +307,7 @@ function storeUserScore() {
 //It gets called after a user wins and a user loses
 function gameDone() {
     var deleteLobbyPath = "/gameRoom/GTN/" + gameRoomID;
-    const dbReference= ref(fb_gamedb, deleteLobbyPath);
+    const dbReference = ref(fb_gamedb, deleteLobbyPath);
     remove(dbReference).then(() => {
         console.log("Lobby has been deleted!");
     }).catch((error) => {
