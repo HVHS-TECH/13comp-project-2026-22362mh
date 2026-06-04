@@ -271,7 +271,7 @@ function checkIfYouLost() {
                 window.location.href = "gtnLoseScreen.html";
             }
         } else {
-            console.log("No record found!");
+            console.log("No one has won yet!");
         }
     });
 }
