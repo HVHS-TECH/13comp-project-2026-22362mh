@@ -23,6 +23,7 @@ let userAge;
 //Sends them to the login page if their user uid does match one of the uids already in the database
 //Or it does nothing if the user uid isn't in the database already
 function registeredAlready(){
+    let userRegistered = false;
     let userUidsPath = "/userData";
     const dbReference= ref(fb_gamedb, userUidsPath);
     get(dbReference).then((snapshot) => {
@@ -32,11 +33,16 @@ function registeredAlready(){
             console.log(userUids);
             const MAX = userUids.length //Max value for the for loop
             for (let i=0; i<MAX; i++){
-                if (userUids = userUid){
-                    let userRegistered = true;
-                    sessionStorage.setItem("userRegistered", userRegistered); //A variable for the login page;
-                    location.href="login.html"; //Sends the user to the login page
+                if (userUids == userUid){
+                    userRegistered = true;
                 }
+            }
+            if (userRegistered == true){
+                sessionStorage.setItem("userRegistered", userRegistered); //A variable for the login page;
+                location.href="login.html"; //Sends the user to the login page
+            }
+            else if (userRegistered == false){
+                console.log("You have not logged in yet!");
             }
         } else {
             console.log("No record found!");
