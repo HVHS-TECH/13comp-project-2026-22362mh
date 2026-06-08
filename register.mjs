@@ -42,7 +42,9 @@ function registeredAlready(){
                 location.href="login.html"; //Sends the user to the login page
             }
             else if (userRegistered == false){
-                console.log("You have not logged in yet!");
+                var registerHeading = document.getElementById("registerHeading");
+                registerHeading.innerHTML = "Thank you for registering an email! Please choose a username and age!";
+                console.log("You have not registered in yet!");
             }
         } else {
             console.log("No record found!");
