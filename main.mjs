@@ -14,35 +14,18 @@
 /************************************/
 
 /***** Functions imported from fb_io.mjs *****/
-import { fb_initialise }
-    from './fb_io.mjs';
-window.fb_initialise = fb_initialise;
-
-import { fb_register }
-    from "./fb_io.mjs";
-window.fb_register = fb_register;
-
-import { fb_login }
-    from './fb_io.mjs';
-window.fb_login = fb_login;
-
-import { userAuthState }
+import { fb_initialise, userAuthState, userAuthStateThenStart, fb_login, fb_register }
     from './fb_io.mjs';
 window.userAuthState = userAuthState;
-
-import { userAuthStateThenStart }
-    from './fb_io.mjs';
 window.userAuthStateThenStart = userAuthStateThenStart;
-
+window.fb_login = fb_login;
+window.fb_register = fb_register;
+window.fb_initialise = fb_initialise;
 
 /***** Functions imported from register.mjs and login.mjs *****/
 import { fb_getSignUpDetails }
     from './register.mjs';
 window.fb_getSignUpDetails = fb_getSignUpDetails;
-
-import { alreadyRegistered }
-    from './login.mjs';
-window.alreadyRegistered = alreadyRegistered;
 
 
 /***** Functions imported from gtnLobby.mjs *****/

@@ -19,8 +19,8 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstati
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 import { registeredAlready} from "./register.mjs";
-import { checkUserUids } from "./login.mjs";
 
+import { getUserName } from "./login.mjs";
 /***** GLOBAL VARIABLES *****/
 var fb_gamedb;
 var userUid;
@@ -57,6 +57,7 @@ function fb_register() {
 
         userUid = result.user.uid;
         console.log(userUid);
+
         registeredAlready();
     })
         .catch((error) => {
@@ -78,7 +79,7 @@ function fb_login() {
         userUid = result.user.uid;
         console.log(userUid);
 
-        checkUserUids();
+        getUserName();
     })
         .catch((error) => {
             console.log(error);

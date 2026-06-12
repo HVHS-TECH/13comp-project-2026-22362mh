@@ -15,6 +15,7 @@ import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
 //GLOBAL VARIABLES
 let username;
 let userAge;
+let userPath = "/userData/" + userUid;
 
 /**** Registered Already Function ****/
 //This function checks if the user has already registered
@@ -23,31 +24,11 @@ let userAge;
 //Sends them to the login page if their user uid does match one of the uids already in the database
 //Or it does nothing if the user uid isn't in the database already
 function registeredAlready(){
-    let userRegistered = false;
-    let userUidsPath = "/userData";
-    const dbReference= ref(fb_gamedb, userUidsPath);
+    const dbReference= ref(fb_gamedb, userPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
-        if (fb_data != null) {
-            let userUids = Object.keys(fb_data); //Getting all the user uids in an array because all the user uids are keys under userData
-            console.log(userUids);
-            const MAX = userUids.length //Max value for the for loop
-            for (let i=0; i<MAX; i++){
-                if (userUids == userUid){
-                    userRegistered = true;
-                }
-            }
-            if (userRegistered == true){
-                sessionStorage.setItem("userRegistered", userRegistered); //A variable for the login page;
-                location.href="login.html"; //Sends the user to the login page
-            }
-            else if (userRegistered == false){
-                var registerHeading = document.getElementById("registerHeading");
-                registerHeading.innerHTML = "Thank you for registering an email! Please choose a username and age!";
-                console.log("You have not registered in yet!");
-            }
-        } else {
-            console.log("No record found!");
+        if (!snapshot.exists()) {
+            location.href = "login.html";
         }
     }).catch((error) => {
         console.log(error);
@@ -78,9 +59,8 @@ function fb_getSignUpDetails() {
 //This function is only called once the user age has been validated
 function storeSignUpDetails() {
     //Storing username in the userData section of firebase underneath the user's userUid
-    var writePath = "/userData/" + userUid;
     var data = { "Username": username };
-    const dbReference = ref(fb_gamedb, writePath);
+    const dbReference = ref(fb_gamedb, userPath);
     set(dbReference, data).then(() => {
         console.log("Username has been stored");
     }).catch((error) => {
@@ -89,15 +69,14 @@ function storeSignUpDetails() {
 
     //Updating the user's record to include their user age along with the username
     //It's updating the record not writing to it because writing to it overwrites the whole record
-    var writePath2 = "/userData/" + userUid;
     var userAgeData = { "userAge": userAge };
-    const dbReference2 = ref(fb_gamedb, writePath2);
+    const dbReference2 = ref(fb_gamedb, userPath);
     update(dbReference2, userAgeData).then(() => {
         console.log("User age has been stored!");
     }).catch((error) => {
         console.log(error);
     });
-
+    
     let gameSelectionButton = document.getElementById("gameSelection");
     gameSelectionButton.style.display = "block";
 }
