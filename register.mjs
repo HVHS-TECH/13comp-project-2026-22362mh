@@ -15,7 +15,6 @@ import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
 //GLOBAL VARIABLES
 let username;
 let userAge;
-let userPath = "/userData/" + userUid;
 
 /**** Registered Already Function ****/
 //This function checks if the user has already registered
@@ -24,11 +23,16 @@ let userPath = "/userData/" + userUid;
 //Sends them to the login page if their user uid does match one of the uids already in the database
 //Or it does nothing if the user uid isn't in the database already
 function registeredAlready(){
+    let userPath = "/userData/" + userUid;
     const dbReference= ref(fb_gamedb, userPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
-        if (!snapshot.exists()) {
+        if (snapshot.exists()) {
             location.href = "login.html";
+        }
+        else {
+            let registerHeading = document.getElementById("registerHeading");
+            registerHeading.innerHTML = "Sign in successful! Please put in username and age!"
         }
     }).catch((error) => {
         console.log(error);
@@ -58,10 +62,11 @@ function fb_getSignUpDetails() {
 //This function stores the user's username and user age which they inputted in the form
 //This function is only called once the user age has been validated
 function storeSignUpDetails() {
+    let userPath = "/userData/" + userUid;
     //Storing username in the userData section of firebase underneath the user's userUid
-    var data = { "Username": username };
+    var userNameData = { "Username": username };
     const dbReference = ref(fb_gamedb, userPath);
-    set(dbReference, data).then(() => {
+    set(dbReference, userNameData).then(() => {
         console.log("Username has been stored");
     }).catch((error) => {
         console.log(error);
