@@ -58,3 +58,7 @@ button:hover {
 #joinCode {
     display: none;
 }
+
+#lobbyList{
+    border-bottom-style: solid;
+}

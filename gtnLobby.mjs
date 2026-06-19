@@ -1,16 +1,15 @@
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set, get, remove, onValue,  onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, remove, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 /***** IMPORTING VARIABLES *****/
-import { fb_gamedb } from "./fb_io.mjs";
-import { userUid } from "./fb_io.mjs";
+import { fb_gamedb, userUid } from "./fb_io.mjs";
 
 //GLOBAL VARIABLES
-var username;
 var joinCode;
 var gameRoomCode;
+var username;
 
 //This function makes a game room under the user's UID
 function createLobby() {
@@ -19,12 +18,11 @@ function createLobby() {
     var dataToWrite = { "firstPlayer": userUid };
     const dbReference = ref(fb_gamedb, gameRoomPath);
     set(dbReference, dataToWrite).then(() => {
-        joinCode = userUid;
         checkGameRoomPlayers(); //Calls a function to check when the game room updates so it can check for a second player
 
         //Displays the user's join code for their game room
         var joinCodeDisplay = document.getElementById("joinCode");
-        joinCodeDisplay.innerHTML = "You have successfully made a lobby! Your join code is : " + joinCode;
+        joinCodeDisplay.innerHTML = "You have successfully made a lobby!"
         joinCodeDisplay.style.display = "block";
     }).catch((error) => {
         console.log(error);
@@ -45,6 +43,18 @@ function createLobby() {
 function lobbyDisconnect() {
     var gameRoomPath = "/gameRoom/GTN/" + userUid;
     onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
+}
+
+function addToListOfLobbies() {
+    var lobbyListPath = "/lobbyList";
+    var addedLobby = { [username]: userUid };
+    const dbReference = ref(fb_gamedb, lobbyListPath);
+    update(dbReference, addedLobby).then(() => {
+        console.log("Lobby list is updated");
+
+    }).catch((error) => {
+        console.log("Couldn't add to lobby list cause of following error: " + error);
+    });
 }
 
 //This function:
@@ -117,6 +127,7 @@ function getFirstPlayerUsername() {
             const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
             update(dbReference, usernameData).then(() => {
                 console.log("Username is stored into game room!");
+                addToListOfLobbies();
             }).catch((error) => {
                 console.log(error);
             });
