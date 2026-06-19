@@ -1,6 +1,6 @@
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, remove, onValue,  onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 /***** IMPORTING VARIABLES *****/

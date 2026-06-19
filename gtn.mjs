@@ -42,6 +42,7 @@ function gameStart() {
                 console.log("You are the " + whichPlayer + " player!");
 
                 disconnect();
+                displaySecondPlayerUsername();
                 getNumber();
                 checkFirstPlayerTurn();
             }
@@ -63,6 +64,40 @@ function gameStart() {
 function disconnect() {
     var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
     onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
+}
+
+function displayFirstPlayerUsername() {
+    var firstPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/firstPlayerUsername"; 
+    const dbReference = ref(fb_gamedb, firstPlayerUsernamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            var firstPlayerUsername = fb_data;
+            var opponentUsername = document.getElementById("opponentUsername");
+            opponentUsername.innerHTML = "You are playing against: " + firstPlayerUsername;
+        } else {
+            alert("It seems your opponent's username couldn't display! Keep playing anyway :)");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+function displaySecondPlayerUsername() {
+    var secondPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/secondPlayerUsername"; 
+    const dbReference = ref(fb_gamedb, secondPlayerUsernamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            var secondPlayerUsername = fb_data;
+            var opponentUsername = document.getElementById("opponentUsername");
+            opponentUsername.innerHTML = "You are playing against: " + secondPlayerUsername;
+        } else {
+            alert("It seems your opponent's username couldn't display! Keep playing anyway :)");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 //This function generates the answer for the users to guess

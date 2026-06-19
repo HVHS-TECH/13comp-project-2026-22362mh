@@ -15,6 +15,7 @@
 
 <body onload="fb_initialise(), userAuthStateThenStart()">
     <h1>GTN game screen</h1>
+    <h3 id="opponentUsername">You are playing against: </h3>
 
     <div class="container">
         <p id="1">1</p>
@@ -39,9 +40,8 @@
         <p id="20">20</p>
     </div>
 
-    <h2>Input your guess here!</h2>
     <div id="guessDisplay">
-    <label for="guess">Guess:</label><br><br>
+    <label for="guess">Input your guess:</label><br><br>
     <input type="number" id="guess" name="guess">
     <input type="submit" onclick='getGuess()'>
     </div>
