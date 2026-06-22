@@ -11,6 +11,10 @@ var joinCode;
 var gameRoomCode;
 var username;
 
+function listenerFunctions(){
+    displayLobbies();
+}
+
 //This function makes a game room under the user's UID
 function createLobby() {
     getFirstPlayerUsername();
@@ -57,59 +61,18 @@ function addToListOfLobbies() {
     });
 }
 
-//This function:
-//Gets the game room code the user inputted
-//Checks if it is an existing and valid game room code for any of the game rooms
-//Calls the joinGameRoom function if it is valid
-//Alerts the user that their code isn't valid if it isn't valid
-function getGameRoomCode() {
-    var codeValid = false;
-
-    //Getting the game room code the user inputted into the html form.
-    gameRoomCode = document.getElementById("gameRoomCode");
-    gameRoomCode = gameRoomCode.value;
-    console.log(gameRoomCode);
-
-    //Reading all the game room codes for Guess the Number
-    var readPath = "/gameRoom/GTN";
-    const dbReference = ref(fb_gamedb, readPath);
-    get(dbReference).then((snapshot) => {
+function displayLobbies() {
+    var lobbiesPath = "/lobbyList"
+    const dbReference = ref(fb_gamedb, lobbiesPath);
+    onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            var allGameRoomCodes = Object.keys(fb_data); //Gets all the game room codes into an array
-            console.log(allGameRoomCodes);
-            //This for loop checks if the game code inputted by the user matches any of the codes in the game room code array.
-            for (let i = 0; i < allGameRoomCodes.length; i++) {
-                if (gameRoomCode == allGameRoomCodes[i]) {
-                    codeValid = true;
-                }
-            }
-            if (codeValid == true) { //Calls this function if the inputted game code is valid
-                joinGameRoom();
-            }
-            else if (codeValid == false) { //If the game code isn't valid, the user is alerted
-                alert("The code you entered does not exist! Please enter a valid code.");
-            }
+            let maxLength = fb_data.length;
+            
         } else {
-            console.log("No record was found");
+            console.log("No record found for lobbies");
         }
-    }).catch((error) => {
-        console.log(error);
-    });
-}
-
-//This function puts the user into the game room that matches the code they entered
-function joinGameRoom() {
-    getSecondPlayerUsername();
-    var gameRoomPath = "/gameRoom/GTN/" + gameRoomCode;
-    var secondPlayerData = { "secondPlayer": userUid }; //Putting them in as second player for the turns
-    const dbReference3 = ref(fb_gamedb, gameRoomPath);
-    update(dbReference3, secondPlayerData).then(() => {
-        console.log("You are in the game room!");
-        checkGameRoomPlayers2(); //Calls a function to check if two players are in the same game room the user is in
-    }).catch((error) => {
-        console.log(error);
     });
 }
 
@@ -262,5 +225,5 @@ function checkGameRoomPlayers2() {
 
 //EXPORTING FUNCTIONS
 export {
-    createLobby, getGameRoomCode
+    createLobby, listenerFunctions
 }

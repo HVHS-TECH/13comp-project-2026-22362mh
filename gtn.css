@@ -62,3 +62,8 @@ button:hover {
 #lobbyList{
     border-bottom-style: solid;
 }
+
+#lobbyDisplay{
+    display: none;
+    column-count: 2;
+}

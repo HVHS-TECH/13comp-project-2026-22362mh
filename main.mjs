@@ -29,13 +29,10 @@ window.fb_getSignUpDetails = fb_getSignUpDetails;
 
 
 /***** Functions imported from gtnLobby.mjs *****/
-import { createLobby }
+import { createLobby, listenerFunctions }
     from './gtnLobby.mjs';
 window.createLobby = createLobby;
-
-import { getGameRoomCode }
-    from './gtnLobby.mjs';
-window.getGameRoomCode = getGameRoomCode;
+window.listenerFunctions = listenerFunctions;
 
 
 /***** Functions imported from gtn.mjs *****/
