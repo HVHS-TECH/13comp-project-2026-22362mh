@@ -69,7 +69,9 @@ function displayLobbies() {
         if (fb_data != null) {
             console.log(fb_data);
             let maxLength = fb_data.length;
-            
+
+            //Assign each entry a variable and use that to put it in a <p>
+            //Have a for loop to do it with <br> in between
         } else {
             console.log("No record found for lobbies");
         }
