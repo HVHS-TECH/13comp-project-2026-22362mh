@@ -64,6 +64,9 @@ button:hover {
 }
 
 #lobbyDisplay{
-    display: none;
-    column-count: 2;
+    column-count: 1;
+}
+
+.lobbies{
+    
 }

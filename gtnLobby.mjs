@@ -1,6 +1,6 @@
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set, get, remove, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, remove, onValue, onChildAdded, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 /***** IMPORTING VARIABLES *****/
@@ -61,20 +61,41 @@ function addToListOfLobbies() {
     });
 }
 
-function displayLobbies() {
+/*function displayLobbies() {
     var lobbiesPath = "/lobbyList"
     const dbReference = ref(fb_gamedb, lobbiesPath);
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
-            let maxLength = fb_data.length;
+            var usernames = Object.keys(fb_data);
+            var usernamesLength = usernames.length;
 
-            //Assign each entry a variable and use that to put it in a <p>
-            //Have a for loop to do it with <br> in between
+            var lobbyDisplay = document.getElementById("lobbyDisplay");
+
+            for(let i=0; i<usernamesLength; i++){
+                //console.log(usernames);
+                //console.log(usernames[0]);
+                lobbyDisplay.innerHTML += "<p>" + usernames[0] + "</p>";
+                usernames.splice(0, 1);
+            }
         } else {
             console.log("No record found for lobbies");
         }
+    });
+}*/
+
+function displayLobbies(){
+    var lobbies = [];
+    const dbReference = ref(fb_gamedb, "/lobbyList");
+    onChildAdded(dbReference, (snapshot) => {
+        var lobbyName = snapshot.key;
+        var lobbyID = "lobby-" + lobbyName;
+        lobbies.push(lobbyID);
+        console.log(lobbyName);
+        var lobbyDisplay = document.getElementById("lobbyDisplay");
+        lobbyDisplay.innerHTML += `<p id="${lobbyID}">` + lobbyName + "</p>";
+
+        
     });
 }
 
