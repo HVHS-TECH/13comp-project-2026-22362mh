@@ -63,10 +63,27 @@ button:hover {
     border-bottom-style: solid;
 }
 
-#lobbyDisplay{
-    column-count: 1;
+#lobbyButtons{
+    width: 30px;
+    height: 30px;
 }
 
-.lobbies{
-    
+.lobbiesUsernames{
+    display: flex;
+    flex-direction: column;
+
+    font-size: 55px;
+
+    margin-right: 80px;
+}
+
+.lobbiesButtons{
+    display: flex;
+    flex-direction: column;
+}
+
+.lobbyDisplays{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }

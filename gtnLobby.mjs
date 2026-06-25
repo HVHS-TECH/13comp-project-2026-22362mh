@@ -42,6 +42,7 @@ function createLobby() {
     });
 
     lobbyDisconnect();
+    deleteDisplayingLobbies();
 }
 
 function lobbyDisconnect() {
@@ -95,8 +96,18 @@ function displayLobbies(){
         var lobbyDisplay = document.getElementById("lobbyDisplay");
         lobbyDisplay.innerHTML += `<p id="${lobbyID}">` + lobbyName + "</p>";
 
-        
+        var lobbyButton = document.getElementById("lobbyButtons");
+        lobbyButton.innerHTML += '<button onclick=getCode()>Join</button>';
     });
+}
+
+function deleteDisplayingLobbies(){
+    var lobbiesPath = "/lobbyList" + username;
+    onDisconnect(ref(fb_gamedb, lobbiesPath)).remove()
+}
+
+function getCode(){
+    
 }
 
 //Getting the user's username from userData using their Uid
