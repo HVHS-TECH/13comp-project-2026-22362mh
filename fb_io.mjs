@@ -14,11 +14,11 @@ console.log('%c fb_io.mjs',
 
 //Importing the needed firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-import { registeredAlready} from "./register.mjs";
+import { registeredAlready } from "./register.mjs";
 
 import { getUserName } from "./login.mjs";
 /***** GLOBAL VARIABLES *****/
@@ -120,5 +120,5 @@ function userAuthStateThenStart() {
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState, userAuthStateThenStart
+    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState, username, userAuthStateThenStart
 }

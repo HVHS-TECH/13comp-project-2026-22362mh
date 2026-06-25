@@ -22,6 +22,7 @@ window.fb_login = fb_login;
 window.fb_register = fb_register;
 window.fb_initialise = fb_initialise;
 
+
 /***** Functions imported from register.mjs and login.mjs *****/
 import { fb_getSignUpDetails }
     from './register.mjs';
@@ -29,10 +30,11 @@ window.fb_getSignUpDetails = fb_getSignUpDetails;
 
 
 /***** Functions imported from gtnLobby.mjs *****/
-import { createLobby, listenerFunctions }
+import { listenerFunctions, getCode, getUsername }
     from './gtnLobby.mjs';
-window.createLobby = createLobby;
 window.listenerFunctions = listenerFunctions;
+window.getCode = getCode;
+window.getUsername = getUsername;
 
 
 /***** Functions imported from gtn.mjs *****/

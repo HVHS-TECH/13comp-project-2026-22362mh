@@ -11,13 +11,29 @@ var joinCode;
 var gameRoomCode;
 var username;
 
-function listenerFunctions(){
+function listenerFunctions() {
     displayLobbies();
+}
+
+function getUsername() {
+    var usernamePath = "/userData/" + userUid + "/Username"
+    const dbReference = ref(fb_gamedb, usernamePath);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            username = fb_data;
+            createLobby();
+        } else {
+            console.log("Uh oh! Username not found.");
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 //This function makes a game room under the user's UID
 function createLobby() {
-    getFirstPlayerUsername();
+    storeFirstPlayerUsername();
     var gameRoomPath = "gameRoom/GTN/" + userUid;
     var dataToWrite = { "firstPlayer": userUid };
     const dbReference = ref(fb_gamedb, gameRoomPath);
@@ -25,9 +41,9 @@ function createLobby() {
         checkGameRoomPlayers(); //Calls a function to check when the game room updates so it can check for a second player
 
         //Displays the user's join code for their game room
-        var joinCodeDisplay = document.getElementById("joinCode");
-        joinCodeDisplay.innerHTML = "You have successfully made a lobby!"
-        joinCodeDisplay.style.display = "block";
+        var createDisplay = document.getElementById("createDisplay");
+        createDisplay.innerHTML = "You have successfully made a lobby!"
+        createDisplay.style.display = "block";
     }).catch((error) => {
         console.log(error);
     });
@@ -36,11 +52,10 @@ function createLobby() {
     var writePath = "gameRoom/GTN/" + userUid;
     const dbReference2 = ref(fb_gamedb, writePath);
     update(dbReference2, firstPlayerTurn).then(() => {
-        console.log("Update successful");
+        console.log("first player is in game room");
     }).catch((error) => {
         console.log(error);
     });
-
     lobbyDisconnect();
     deleteDisplayingLobbies();
 }
@@ -62,91 +77,58 @@ function addToListOfLobbies() {
     });
 }
 
-/*function displayLobbies() {
-    var lobbiesPath = "/lobbyList"
-    const dbReference = ref(fb_gamedb, lobbiesPath);
-    onValue(dbReference, (snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            var usernames = Object.keys(fb_data);
-            var usernamesLength = usernames.length;
-
-            var lobbyDisplay = document.getElementById("lobbyDisplay");
-
-            for(let i=0; i<usernamesLength; i++){
-                //console.log(usernames);
-                //console.log(usernames[0]);
-                lobbyDisplay.innerHTML += "<p>" + usernames[0] + "</p>";
-                usernames.splice(0, 1);
-            }
-        } else {
-            console.log("No record found for lobbies");
-        }
-    });
-}*/
-
-function displayLobbies(){
+function displayLobbies() {
     var lobbies = [];
     const dbReference = ref(fb_gamedb, "/lobbyList");
     onChildAdded(dbReference, (snapshot) => {
         var lobbyName = snapshot.key;
-        var lobbyID = "lobby-" + lobbyName;
-        lobbies.push(lobbyID);
-        console.log(lobbyName);
+        var lobbyCode = snapshot.val();
+        console.log(lobbyCode);
         var lobbyDisplay = document.getElementById("lobbyDisplay");
-        lobbyDisplay.innerHTML += `<p id="${lobbyID}">` + lobbyName + "</p>";
+        lobbyDisplay.innerHTML += `<p id="${lobbyName}">` + lobbyName + "</p>";
 
         var lobbyButton = document.getElementById("lobbyButtons");
-        lobbyButton.innerHTML += '<button onclick=getCode()>Join</button>';
+        lobbyButton.innerHTML += `<button id="${lobbyCode}", onclick=getCode()>Join</button>`;
     });
 }
 
-function deleteDisplayingLobbies(){
+function deleteDisplayingLobbies() {
     var lobbiesPath = "/lobbyList" + username;
     onDisconnect(ref(fb_gamedb, lobbiesPath)).remove()
 }
 
-function getCode(){
-    
-}
-
-//Getting the user's username from userData using their Uid
-function getFirstPlayerUsername() {
-    var userNamePath = "/userData/" + userUid + "/Username";
-    const dbReference = ref(fb_gamedb, userNamePath);
-    get(dbReference).then((snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            console.log(fb_data);
-            username = fb_data;
-            var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid; //Path for the game room
-            var usernameData = { "firstPlayerUsername": username }; //Username data to write into the game room
-            const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
-            update(dbReference, usernameData).then(() => {
-                console.log("Username is stored into game room!");
-                addToListOfLobbies();
-            }).catch((error) => {
-                console.log(error);
-            });
-        } else {
-            console.log("No record found");
-        }
-    }).catch((error) => {
-        console.log(error);
+function getCode() {
+    document.addEventListener("click", function (event) { //Computer is checking if the user clicks a button
+        gameRoomCode = event.target.id;
+        console.log(event.target.id); //Reading the id of the button which is the game code of the game room someone created
+        storeSecondPlayerInfo();
     });
 }
 
 //Getting the user's username from userData using their Uid
-function getSecondPlayerUsername() {
-    var userNamePath = "/userData/" + userUid + "/Username";
-    const dbReference = ref(fb_gamedb, userNamePath);
+function storeFirstPlayerUsername() {
+    var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid; //Path for the game room
+    var usernameData = { "firstPlayerUsername": username }; //Username data to write into the game room
+    const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
+    update(dbReference, usernameData).then(() => {
+        addToListOfLobbies();
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    checkGameRoomPlayers();
+}
+
+//Getting the user's username from userData using their Uid
+function storeSecondPlayerInfo() {
+    var usernamePath = "/userData/" + userUid + "/Username"
+    const dbReference = ref(fb_gamedb, usernamePath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
-            username = fb_data;
+            var secondPlayerUsername = fb_data;
             var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
-            var usernameData = { "secondPlayerUsername": username }; //Username data to write into it
+            var usernameData = { "secondPlayerUsername": secondPlayerUsername }; //Username data to write into it
             const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
             update(dbReference, usernameData).then(() => {
                 console.log("Username is stored into game room!");
@@ -154,11 +136,13 @@ function getSecondPlayerUsername() {
                 console.log(error);
             });
         } else {
-            console.log("No record found");
+            console.log("Uh oh! Username not found.");
         }
     }).catch((error) => {
         console.log(error);
     });
+
+    checkGameRoomPlayers2();
 }
 
 //This function checks if two people are in the game room the user is in if they created the game room
@@ -259,5 +243,5 @@ function checkGameRoomPlayers2() {
 
 //EXPORTING FUNCTIONS
 export {
-    createLobby, listenerFunctions
+    listenerFunctions, getCode, getUsername
 }
