@@ -1,6 +1,6 @@
 /***** IMPORT FUNCTIONS *****/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getDatabase, ref, set, get, remove, onValue, onChildAdded, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { getDatabase, ref, set, get, remove, onChildRemoved, onValue, onChildAdded, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 /***** IMPORTING VARIABLES *****/
@@ -59,15 +59,16 @@ function createLobby() {
     lobbyDisconnect();
 }
 
+//This function checks if the user has disconnected from the browser
+//If the user has disconnected, it deletes:
+//   - the lobby that the user created in the gameRoom/GTN path
+//   - the lobby that the user has from the lobbyList so it doesn't display in the html anymore 
 function lobbyDisconnect() {
-    var gameRoomPath = "/gameRoom/GTN/" + userUid;
-    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
+    var gameRoomPath = "/gameRoom/GTN/" + userUid; //The path of the user's lobby in the gameRoom/GTN path
+    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove(); //Removing the lobby
 
-    var lobbiesPath = "/lobbyList" + username;
-    onDisconnect(ref(fb_gamedb, lobbiesPath)).remove();
-
-    var userLobbyDisplay = document.getElementById(username);
-    userLobbyDisplay.remove();
+    var lobbiesPath = "/lobbyList/" + username; //The path of the user's lobby in the lobbyList path
+    onDisconnect(ref(fb_gamedb, lobbiesPath)).remove(); //Removing the lobby
 }
 
 function addToListOfLobbies() {
@@ -98,6 +99,16 @@ function displayLobbies() {
         var lobbyButton = document.getElementById("lobbyButtons"); //Getting the html element of the lobby buttons
         lobbyButton.innerHTML += `<button id="${lobbyCode}", onclick=getCode()>Join</button>`; //Adding another button for the lobby while setting the id of the button to the code of the lobby
     });
+}
+
+function deleteLobbies(){
+    const dbReference = ref(fb_gamedb, "/lobbyList");
+    onChildRemoved(dbReference, (snapshot) => {
+        var lobbyName = snapshot.key;
+
+        var lobbyToDelete = document.getElementById(lobbyName);
+        lobbyToDelete.remove();
+    })
 }
 
 //This function gets the code of the lobby button the user clicks on
