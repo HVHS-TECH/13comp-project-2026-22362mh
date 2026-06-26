@@ -61,12 +61,8 @@ function createLobby() {
 
 //This function checks if the user has disconnected from the browser
 //If the user has disconnected, it deletes:
-//   - the lobby that the user created in the gameRoom/GTN path
 //   - the lobby that the user has from the lobbyList so it doesn't display in the html anymore 
 function lobbyDisconnect() {
-    var gameRoomPath = "/gameRoom/GTN/" + userUid; //The path of the user's lobby in the gameRoom/GTN path
-    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove(); //Removing the lobby
-
     var lobbiesPath = "/lobbyList/" + username; //The path of the user's lobby in the lobbyList path
     onDisconnect(ref(fb_gamedb, lobbiesPath)).remove(); //Removing the lobby
 }
