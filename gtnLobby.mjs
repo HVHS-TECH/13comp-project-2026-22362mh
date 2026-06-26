@@ -57,12 +57,17 @@ function createLobby() {
         console.log(error);
     });
     lobbyDisconnect();
-    deleteDisplayingLobbies();
 }
 
 function lobbyDisconnect() {
     var gameRoomPath = "/gameRoom/GTN/" + userUid;
-    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
+    onDisconnect(ref(fb_gamedb, gameRoomPath)).remove();
+
+    var lobbiesPath = "/lobbyList" + username;
+    onDisconnect(ref(fb_gamedb, lobbiesPath)).remove();
+
+    var userLobbyDisplay = document.getElementById(username);
+    userLobbyDisplay.remove();
 }
 
 function addToListOfLobbies() {
@@ -77,26 +82,27 @@ function addToListOfLobbies() {
     });
 }
 
+//This function displays the lobbies created in html
+//It reads the lobbyList in firebase where all created lobbies are stored
+//It displays it by adding to the html with an id of the username of the user who created said lobby
+//A lobby button is created for the lobby too, containing an id of the lobby code for easy use later on.
 function displayLobbies() {
     var lobbies = [];
     const dbReference = ref(fb_gamedb, "/lobbyList");
-    onChildAdded(dbReference, (snapshot) => {
-        var lobbyName = snapshot.key;
-        var lobbyCode = snapshot.val();
-        console.log(lobbyCode);
-        var lobbyDisplay = document.getElementById("lobbyDisplay");
-        lobbyDisplay.innerHTML += `<p id="${lobbyName}">` + lobbyName + "</p>";
+    onChildAdded(dbReference, (snapshot) => { //For each lobby added, it does the following code
+        var lobbyName = snapshot.key; //The username of the user who created the lobby
+        var lobbyCode = snapshot.val(); //The code for the lobby
+        var lobbyDisplay = document.getElementById("lobbyDisplay"); //Getting the html element for the name of the lobby
+        lobbyDisplay.innerHTML += `<p id="${lobbyName}">` + lobbyName + "</p>"; //Adding another p element to display the name of the lobby and setting the id to the name of the lobby
 
-        var lobbyButton = document.getElementById("lobbyButtons");
-        lobbyButton.innerHTML += `<button id="${lobbyCode}", onclick=getCode()>Join</button>`;
+        var lobbyButton = document.getElementById("lobbyButtons"); //Getting the html element of the lobby buttons
+        lobbyButton.innerHTML += `<button id="${lobbyCode}", onclick=getCode()>Join</button>`; //Adding another button for the lobby while setting the id of the button to the code of the lobby
     });
 }
 
-function deleteDisplayingLobbies() {
-    var lobbiesPath = "/lobbyList" + username;
-    onDisconnect(ref(fb_gamedb, lobbiesPath)).remove()
-}
-
+//This function gets the code of the lobby button the user clicks on
+//It checks if the user has clicked
+//If the player clicked a button, the id is read and because the id of the buttons are set to the lobby codes, the user who clicks on a button now has the code of a lobby
 function getCode() {
     document.addEventListener("click", function (event) { //Computer is checking if the user clicks a button
         gameRoomCode = event.target.id;
@@ -121,7 +127,6 @@ function storeFirstPlayerUsername() {
 
 //Getting the user's username from userData using their Uid
 function storeSecondPlayerInfo() {
-    var secondPlayerUsername = fb_data;
     var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
     var usernameData = { "secondPlayer": userUid }; //Username data to write into it
     const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
