@@ -121,23 +121,12 @@ function storeFirstPlayerUsername() {
 
 //Getting the user's username from userData using their Uid
 function storeSecondPlayerInfo() {
-    var usernamePath = "/userData/" + userUid + "/Username"
-    const dbReference = ref(fb_gamedb, usernamePath);
-    get(dbReference).then((snapshot) => {
-        var fb_data = snapshot.val();
-        if (fb_data != null) {
-            var secondPlayerUsername = fb_data;
-            var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
-            var usernameData = { "secondPlayerUsername": secondPlayerUsername }; //Username data to write into it
-            const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
-            update(dbReference, usernameData).then(() => {
-                console.log("Username is stored into game room!");
-            }).catch((error) => {
-                console.log(error);
-            });
-        } else {
-            console.log("Uh oh! Username not found.");
-        }
+    var secondPlayerUsername = fb_data;
+    var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
+    var usernameData = { "secondPlayer": userUid }; //Username data to write into it
+    const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
+    update(dbReference, usernameData).then(() => {
+        console.log("Username is stored into game room!");
     }).catch((error) => {
         console.log(error);
     });
