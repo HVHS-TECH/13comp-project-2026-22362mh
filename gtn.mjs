@@ -41,9 +41,9 @@ function gameStart() {
                 whichPlayer = "first";
                 console.log("You are the " + whichPlayer + " player!");
 
+                getNumber();
                 disconnect();
                 displaySecondPlayerUsername();
-                getNumber();
                 checkFirstPlayerTurn();
             }
         } else {
@@ -53,6 +53,7 @@ function gameStart() {
             console.log("You are the " + whichPlayer + " player!");
 
             disconnect();
+            displayFirstPlayerUsername();
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
