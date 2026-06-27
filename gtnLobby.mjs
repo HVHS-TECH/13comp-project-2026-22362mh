@@ -33,17 +33,11 @@ function getUsername() {
 
 //This function makes a game room under the user's UID
 function createLobby() {
-    storeFirstPlayerUsername();
     var gameRoomPath = "gameRoom/GTN/" + userUid;
     var dataToWrite = { "firstPlayer": userUid };
     const dbReference = ref(fb_gamedb, gameRoomPath);
     set(dbReference, dataToWrite).then(() => {
         checkGameRoomPlayers(); //Calls a function to check when the game room updates so it can check for a second player
-
-        //Displays the user's join code for their game room
-        var createDisplay = document.getElementById("createDisplay");
-        createDisplay.innerHTML = "You have successfully made a lobby!"
-        createDisplay.style.display = "block";
     }).catch((error) => {
         console.log(error);
     });
@@ -56,7 +50,19 @@ function createLobby() {
     }).catch((error) => {
         console.log(error);
     });
+
+    var usernamePath = "/gameRoom/GTN/" + userUid;
+    var usernameData = {"firstPlayerUsername": username};
+    const dbReference3 = ref(fb_gamedb, usernamePath);
+    update(dbReference3, usernameData).then(() => {
+        console.log("First player username is stored");
+        addToListOfLobbies();
+    }).catch((error) => {
+        console.log(error);
+    });
+
     lobbyDisconnect();
+    checkGameRoomPlayers();
 }
 
 //This function checks if the user has disconnected from the browser
@@ -113,32 +119,26 @@ function deleteLobbies(){
 function getCode() {
     document.addEventListener("click", function (event) { //Computer is checking if the user clicks a button
         gameRoomCode = event.target.id;
-        console.log(event.target.id); //Reading the id of the button which is the game code of the game room someone created
         storeSecondPlayerInfo();
     });
 }
 
 //Getting the user's username from userData using their Uid
-function storeFirstPlayerUsername() {
-    var gameRoomUsernamePath = "/gameRoom/GTN/" + userUid; //Path for the game room
-    var usernameData = { "firstPlayerUsername": username }; //Username data to write into the game room
-    const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
+function storeSecondPlayerInfo() {
+    var userUIDPath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
+    var usernameData = { "secondPlayer": userUid }; //Username data to write into it
+    const dbReference = ref(fb_gamedb, userUIDPathPath);
     update(dbReference, usernameData).then(() => {
-        addToListOfLobbies();
+        console.log("User uid is stored into game room!");
     }).catch((error) => {
         console.log(error);
     });
 
-    checkGameRoomPlayers();
-}
-
-//Getting the user's username from userData using their Uid
-function storeSecondPlayerInfo() {
-    var gameRoomUsernamePath = "/gameRoom/GTN/" + gameRoomCode; //Path for the game room
-    var usernameData = { "secondPlayer": userUid }; //Username data to write into it
-    const dbReference = ref(fb_gamedb, gameRoomUsernamePath);
-    update(dbReference, usernameData).then(() => {
-        console.log("Username is stored into game room!");
+    var usernamePath = "/gameRoom/GTN/" + gameRoomCode;
+    var secondPlayerUsername = {"secondPlayerUsername" : username};
+    const dbReference2 = ref(fb_gamedb, usernamePath);
+    update(dbReference2, secondPlayerUsername ).then(() => {
+        console.log("Second player username is stored");
     }).catch((error) => {
         console.log(error);
     });
@@ -157,7 +157,6 @@ function checkGameRoomPlayers() {
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
 
             //Reading the game room to check if there are two players in it
             var readPath = "/gameRoom/GTN/" + userUid;
@@ -165,9 +164,7 @@ function checkGameRoomPlayers() {
             get(dbReference).then((snapshot) => {
                 var fb_data = snapshot.val();
                 if (fb_data != null) {
-                    console.log(fb_data);
                     var players = Object.keys(fb_data);
-                    console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
                     for (let i = 0; i < players.length; i++) {
                         if (players[i] == "firstPlayer") {
@@ -205,7 +202,6 @@ function checkGameRoomPlayers2() {
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
 
             //Reading the game room to check if two players are in it
             var readPath = "/gameRoom/GTN/" + gameRoomCode;
@@ -213,9 +209,7 @@ function checkGameRoomPlayers2() {
             get(dbReference).then((snapshot) => {
                 var fb_data = snapshot.val();
                 if (fb_data != null) {
-                    console.log(fb_data);
                     var players = Object.keys(fb_data);
-                    console.log(players);
                     //Checks if there is a first player and second player in the game room so the user can go to the game screen
                     for (let i = 0; i < players.length; i++) {
                         if (players[i] == "firstPlayer") {
