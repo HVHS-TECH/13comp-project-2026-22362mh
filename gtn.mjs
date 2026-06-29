@@ -60,30 +60,37 @@ function gameStart() {
     });
 }
 
+//This function deletes the lobby if a player disconnects
 function disconnect() {
     var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
     onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
 }
 
-function otherUserDisconnected(){
+//This lobby checks if the game is done, therefore the lobby can be deleted
+//Or if the other user has disconnected and the lobby is being deleted because they disconnected.
+//If the game is ending, nothing happens
+//If the other user disconnected, the user still in the game gets an alert saying their opponent left
+//They also get transferred to the game selection page
+function otherUserDisconnected() {
     const dbReference = ref(fb_gamedb, "/gameRoom/GTN");
     onChildRemoved(dbReference, (snapshot) => {
         var lobbyName = snapshot.key;
 
-        if (leavingLobby == true){
-            console.log("Game is over");
+        if (leavingLobby == true) { //If the game is over and the players are leaving the lobby
+            console.log("Game is over"); //Nothing happens because the game has ended at the right time
         }
-        else {
-            if (lobbyName == gameRoomID){
-            alert("Sorry! Looks like your opponent left the lobby! Sending you back to the game selection page :D");
-            window.location.href = "gameSelection.html";
-        }
+        else { //If the game is ending because the opponent disconnected
+            if (lobbyName == gameRoomID) { //If the removed lobby is the one the remaining user is in
+                alert("Sorry! Looks like your opponent left the lobby! Sending you back to the game selection page :D");
+                window.location.href = "gameSelection.html"; //Sending user back to game selection page
+            }
         }
     });
 }
 
+//This function displays the first player username for the second player
 function displayFirstPlayerUsername() {
-    var firstPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/firstPlayerUsername"; 
+    var firstPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/firstPlayerUsername";
     const dbReference = ref(fb_gamedb, firstPlayerUsernamePath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
@@ -99,8 +106,9 @@ function displayFirstPlayerUsername() {
     });
 }
 
+//This function displays the second player username for the first player
 function displaySecondPlayerUsername() {
-    var secondPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/secondPlayerUsername"; 
+    var secondPlayerUsernamePath = "/gameRoom/GTN/" + gameRoomID + "/secondPlayerUsername";
     const dbReference = ref(fb_gamedb, secondPlayerUsernamePath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();

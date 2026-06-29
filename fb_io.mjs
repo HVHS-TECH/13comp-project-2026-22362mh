@@ -25,6 +25,7 @@ import { getUserName } from "./login.mjs";
 var fb_gamedb;
 var userUid;
 var username;
+var userEmailRegistered = false;
 
 //Function for initialising firebase
 function fb_initialise() {
@@ -57,6 +58,8 @@ function fb_register() {
 
         userUid = result.user.uid;
         console.log(userUid);
+
+        userEmailRegistered = true;
 
         registeredAlready();
     })
@@ -120,5 +123,5 @@ function userAuthStateThenStart() {
 
 //Exporting the needed functions
 export {
-    fb_initialise, fb_gamedb, fb_register, fb_login, userUid, userAuthState, username, userAuthStateThenStart
+    fb_initialise, fb_gamedb, fb_register, userEmailRegistered, fb_login, userUid, userAuthState, username, userAuthStateThenStart
 }

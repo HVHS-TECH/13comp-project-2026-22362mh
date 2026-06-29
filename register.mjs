@@ -10,7 +10,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-import { fb_gamedb, userUid, fb_register } from './fb_io.mjs';
+import { fb_gamedb, userUid, fb_register, userEmailRegistered } from './fb_io.mjs';
 
 //GLOBAL VARIABLES
 let username;
@@ -22,9 +22,9 @@ let userAge;
 //Checks if the user's uid is one of them
 //Sends them to the login page if their user uid does match one of the uids already in the database
 //Or it does nothing if the user uid isn't in the database already
-function registeredAlready(){
+function registeredAlready() {
     let userPath = "/userData/" + userUid;
-    const dbReference= ref(fb_gamedb, userPath);
+    const dbReference = ref(fb_gamedb, userPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (snapshot.exists()) {
@@ -44,18 +44,30 @@ function registeredAlready(){
 //If either aren't valid, it sends an alert to the user telling them of the conditions for the user name and age to be valid
 //If both the user name and age are valid, it calls another function to store the details under userData in firebase
 function fb_getSignUpDetails() {
-    userAge = document.getElementById("userAge"); //Getting the user age from the register form
-    userAge = userAge.value;
-    console.log(userAge);
+    var userAgeValid = false;
+    var userNameValid = false;
+    if (userEmailRegistered == true) {
+        userAge = document.getElementById("userAge"); //Getting the user age from the register form
+        userAge = userAge.value;
+        console.log(userAge);
 
-    if (userAge < 13 || userAge > 100 || isNaN === true) { //Checks to make sure the user age is 13-100 and check to make sure it's a number.
-        alert("Please put in an age between 13 and 100!"); //If the conditions for the age aren't met, it gives the user an alert
-    }
-    else {
         username = document.getElementById("username"); //After the age has been validated, it gets the username from the form
         username = username.value;
         console.log(username);
-        storeSignUpDetails(); //Once both the user age and username are taken from the form, a function is called to store them in firebase
+
+        if (userAge < 13 || userAge > 100 || isNaN === true) { //Checks to make sure the user age is 13-100 and check to make sure it's a number.
+            alert("Please put in an age between 13 and 100!"); //If the conditions for the age aren't met, it gives the user an alert   
+        }
+        else {
+            userAgeValid = true;
+        }
+
+        if (username == " " || username == null || isNaN == false){
+            console.log("Please put in a valid username with only letters!");
+        }
+    }
+    else if (userEmailRegistered == false){
+        alert("Please put in an email before you put in a username and age!");
     }
 }
 
@@ -81,7 +93,7 @@ function storeSignUpDetails() {
     }).catch((error) => {
         console.log(error);
     });
-    
+
     let gameSelectionButton = document.getElementById("gameSelection");
     gameSelectionButton.style.display = "block";
 }

@@ -9,7 +9,7 @@ import { username as userName } from "./login.mjs"
 
 import { fb_gamedb, fb_initialise } from "./fb_io.mjs";
 
-
+//This function sorts the scores for GTN
 function gtn_readSorted() {
     let scoreArray = [];
 
@@ -19,12 +19,11 @@ function gtn_readSorted() {
     const dbReference = query(ref(fb_gamedb, gtnGameScores), orderByChild(sortkey), limitToFirst(numberToRead));
     get(dbReference).then((snapshot) => {
        snapshot.forEach(function(userScoreSnapshot) {
-        var scores = userScoreSnapshot.val();
-        console.log(scores.score);
-        let userName = userScoreSnapshot.key;
-        let userScore = scores.score;
+        var scores = userScoreSnapshot.val(); //Gets the score child of each entry in the gameScores/GTN path into an array
+        let userName = userScoreSnapshot.key; //Gets the username from the key that the score child is attached to
+        let userScore = scores.score; //Gets the score value from the child of score
         let scoreObject = {[userName]: userScore};
-        scoreArray.push(scoreObject);
+        scoreArray.push(scoreObject); 
        });
        console.log(scoreArray);
        displayScores(scoreArray);
