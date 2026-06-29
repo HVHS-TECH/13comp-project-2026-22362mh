@@ -110,7 +110,7 @@ function deleteLobbies() {
 
         var lobbyToDelete = document.getElementById(lobbyName);
         lobbyToDelete.remove();
-    })
+    });
 }
 
 //This function gets the code of the lobby button the user clicks on

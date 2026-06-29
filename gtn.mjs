@@ -10,7 +10,7 @@
 /************************************/
 
 //IMPORTING FIREBASE FUNCTIONS
-import { ref, set, get, update, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+import { ref, set, get, update, onValue, remove, onDisconnect, onChildRemoved } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
 //IMPORTING VARIABLES NEEDED
 import { fb_gamedb } from "./fb_io.mjs";
@@ -21,6 +21,7 @@ var correctAnswer;
 var gameRoomID;
 var whichPlayer;
 var score = 0;
+var leavingLobby = false;
 
 //This function:
 //Gets the first player to generate a correct answer which stores in firebase
@@ -28,14 +29,11 @@ var score = 0;
 //Doesn't allow the second player to guess at the start
 //Assigns the gameRoomID to the same data but in differing ways based on whether or not the player is the first player or not
 function gameStart() {
-    console.log("gameStart");
-
     var playerPath = "gameRoom/GTN/" + userUid + "/firstPlayer";
     const dbReference = ref(fb_gamedb, playerPath);
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             if (fb_data == userUid) {
                 gameRoomID = userUid;
                 whichPlayer = "first";
@@ -48,7 +46,6 @@ function gameStart() {
             }
         } else {
             gameRoomID = sessionStorage.getItem("gameRoomCode");
-            console.log(gameRoomID);
             whichPlayer = "second";
             console.log("You are the " + whichPlayer + " player!");
 
@@ -57,6 +54,7 @@ function gameStart() {
             getCorrectAnswer();
             checkSecondPlayerTurn();
         }
+        otherUserDisconnected();
     }).catch((error) => {
         console.log(error);
     });
@@ -65,6 +63,23 @@ function gameStart() {
 function disconnect() {
     var gameRoomPath = "/gameRoom/GTN/" + gameRoomID;
     onDisconnect(ref(fb_gamedb, gameRoomPath)).remove()
+}
+
+function otherUserDisconnected(){
+    const dbReference = ref(fb_gamedb, "/gameRoom/GTN");
+    onChildRemoved(dbReference, (snapshot) => {
+        var lobbyName = snapshot.key;
+
+        if (leavingLobby == true){
+            console.log("Game is over");
+        }
+        else {
+            if (lobbyName == gameRoomID){
+            alert("Sorry! Looks like your opponent left the lobby! Sending you back to the game selection page :D");
+            window.location.href = "gameSelection.html";
+        }
+        }
+    });
 }
 
 function displayFirstPlayerUsername() {
@@ -105,7 +120,6 @@ function displaySecondPlayerUsername() {
 //It stores it into firebase so both users have the same number
 function getNumber() {
     correctAnswer = Math.floor(Math.random() * 20) + 1;
-    console.log(correctAnswer);
 
     //Writing the correct answer into the database so both players have the same answer
     var correctAnswerData = { "correctAnswer": correctAnswer }
@@ -125,7 +139,6 @@ function getCorrectAnswer() {
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             correctAnswer = fb_data;
         } else {
             console.log("No record found!");
@@ -143,7 +156,6 @@ function checkFirstPlayerTurn() {
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             if (fb_data == 'first') { //If firebase says it's the first player's turn...
                 yourTurn(); //The turn function is called
             }
@@ -159,13 +171,11 @@ function checkFirstPlayerTurn() {
 //This function checks if it's the second player's turn
 //It does this by reading the playerTurn key in the database
 function checkSecondPlayerTurn() {
-    console.log(gameRoomID);
     var monitorPath = "/gameRoom/GTN/" + gameRoomID + "/playerTurn";
     const dbReference = ref(fb_gamedb, monitorPath);
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             if (fb_data == "second") {
                 yourTurn();
             }
@@ -186,7 +196,6 @@ function switchPlayerTurn() {
     get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             if (fb_data == "first") { //If it was the first player's turn
                 var second = { playerTurn: "second" };
                 const dbReference = ref(fb_gamedb, updatePath); //The computer updates the playerTurn to be the second player's turn
@@ -230,11 +239,10 @@ function getGuess() {
     //Gets the user's guess from the html form
     var guess = document.getElementById("guess");
     guess = guess.value;
-    console.log(guess);
 
     //If the user guesses the correct answer, they get an alert saying they've got it right
     if (guess == correctAnswer) {
-        console.log("You got it right!");
+        leavingLobby = true;
         whoWon();
         storeUserScore();
     }
@@ -248,14 +256,12 @@ function getGuess() {
     }
     //If their guess is smaller than the correct answer, they get an alert saying the correct number is higher
     else if (guess < correctAnswer) {
-        console.log("Higher!");
         alert("The number is higher!");
         var wrong = document.getElementById(guess);
         wrong.style.color = 'rgb(170, 0, 0)';
     }
     //If their guess is larger than the correct answer, they get an alert saying the number is lower
     else if (guess > correctAnswer) {
-        console.log("Lower!");
         alert("The number is lower!");
         wrong = document.getElementById(guess);
         wrong.style.color = 'rgb(170, 0, 0)';
@@ -291,13 +297,11 @@ function whoWon() {
 
 //This function checks which player lost by using an onValue listener
 function checkIfYouLost() {
-    console.log("Checking if you lost...");
     let checkWinningPlayerPath = "/gameRoom/GTN/" + gameRoomID + "/playerWhoWon";
     const dbReference = ref(fb_gamedb, checkWinningPlayerPath);
     onValue(dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-            console.log(fb_data);
             if (fb_data == "first" && whichPlayer == "second") {
                 gameDone();
                 window.location.href = "gtnLoseScreen.html";
@@ -321,7 +325,6 @@ function storeUserScore() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             username = fb_data;
-            console.log("Username is: " + username);
             let gtnGameScoresPath = "/gameScores/GTN/" + username;
             let userScoreData = { "score": score };
             const dbReference2 = ref(fb_gamedb, gtnGameScoresPath);
