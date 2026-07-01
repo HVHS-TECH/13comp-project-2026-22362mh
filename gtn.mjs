@@ -308,10 +308,12 @@ function checkIfYouLost() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             if (fb_data == "first" && whichPlayer == "second") {
+                leavingLobby = true;
                 gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }
             if (fb_data == "second" && whichPlayer == "first") {
+                leavingLobby = true;
                 gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }
