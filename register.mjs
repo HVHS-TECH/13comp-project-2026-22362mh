@@ -44,8 +44,6 @@ function registeredAlready() {
 //If either aren't valid, it sends an alert to the user telling them of the conditions for the user name and age to be valid
 //If both the user name and age are valid, it calls another function to store the details under userData in firebase
 function fb_getSignUpDetails() {
-    var userAgeValid = false;
-    var userNameValid = false;
     if (userEmailRegistered == true) {
         userAge = document.getElementById("userAge"); //Getting the user age from the register form
         userAge = userAge.value;
@@ -59,11 +57,21 @@ function fb_getSignUpDetails() {
             alert("Please put in an age between 13 and 100!"); //If the conditions for the age aren't met, it gives the user an alert   
         }
         else {
-            userAgeValid = true;
+            console.log("Age is valid");
+            var userAgeValid = true;
         }
 
-        if (username == " " || username == null || isNaN == false){
-            console.log("Please put in a valid username with only letters!");
+        if (username == " " || username == "" || !isNaN(username)){
+            alert("Please put in a valid username containing letters, 5-15 characters!");
+        }
+        else {
+            console.log("Name is valid");
+            var usernameValid = true;
+        }
+
+        if (usernameValid && userAgeValid){
+            console.log("Username and age valid");
+            storeSignUpDetails();
         }
     }
     else if (userEmailRegistered == false){

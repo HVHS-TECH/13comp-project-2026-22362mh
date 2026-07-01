@@ -13,9 +13,8 @@
     <h1 id="registerHeading">Please register your account!</h1>
 
     <button onclick='fb_initialise(), fb_register()'>Choose an email</button><br>
-
     <label for="username">Username: </label><br>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" minlength="5" maxlength="15" id="username" name="username"><br>
     <label for="userAge">Age: </label><br>
     <input type="number" id="userAge" name="userAge"><br><br>
     <input id="submitButton" type="submit" onclick='fb_getSignUpDetails()'>
