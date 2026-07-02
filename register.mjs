@@ -53,7 +53,7 @@ function fb_getSignUpDetails() {
         username = username.value;
         console.log(username);
 
-        if (userAge < 13 || userAge > 100 || isNaN === true) { //Checks to make sure the user age is 13-100 and check to make sure it's a number.
+        if (userAge < 13 || userAge > 100 || userAge == null || userAge % 1 !== 0) { //Checks to make sure the user age is 13-100 and check to make sure it's a number.
             alert("Please put in an age between 13 and 100!"); //If the conditions for the age aren't met, it gives the user an alert   
         }
         else {
@@ -62,7 +62,7 @@ function fb_getSignUpDetails() {
         }
 
         if (username == " " || username == "" || !isNaN(username)){
-            alert("Please put in a valid username containing letters, 5-15 characters!");
+            alert("Please put in a valid username containing letters!");
         }
         else {
             console.log("Name is valid");

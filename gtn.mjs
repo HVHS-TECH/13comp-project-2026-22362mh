@@ -248,34 +248,31 @@ function getGuess() {
     var guess = document.getElementById("guess");
     guess = guess.value;
 
-    //If the user guesses the correct answer, they get an alert saying they've got it right
-    if (guess == correctAnswer) {
-        leavingLobby = true;
-        whoWon();
-        storeUserScore();
+    if (guess == "" || guess % 1 !== 0 || guess <= 0 || guess > 20) {
+        alert("Please put in a guess between 1 & 20!");
     }
-    //If their guess is zero or a negative number, they get an alert
-    else if (guess <= 0) {
-        alert("Put in a number between 1 and 20!");
-    }
-    //If their guess is higher than 20 (the max guess value), they get an alert
-    else if (guess > 20) {
-        alert("Put in a number between 1 and 20!")
-    }
-    //If their guess is smaller than the correct answer, they get an alert saying the correct number is higher
-    else if (guess < correctAnswer) {
-        alert("The number is higher!");
-        var wrong = document.getElementById(guess);
-        wrong.style.color = 'rgb(170, 0, 0)';
-    }
-    //If their guess is larger than the correct answer, they get an alert saying the number is lower
-    else if (guess > correctAnswer) {
-        alert("The number is lower!");
-        wrong = document.getElementById(guess);
-        wrong.style.color = 'rgb(170, 0, 0)';
-    }
+    else {
+        //If the user guesses the correct answer, they get an alert saying they've got it right
+        if (guess == correctAnswer) {
+            leavingLobby = true;
+            whoWon();
+            storeUserScore();
+        }
+        //If their guess is smaller than the correct answer, they get an alert saying the correct number is higher
+        else if (guess < correctAnswer) {
+            alert("The number is higher!");
+            var wrong = document.getElementById(guess);
+            wrong.style.color = 'rgb(170, 0, 0)';
+        }
+        //If their guess is larger than the correct answer, they get an alert saying the number is lower
+        else if (guess > correctAnswer) {
+            alert("The number is lower!");
+            wrong = document.getElementById(guess);
+            wrong.style.color = 'rgb(170, 0, 0)';
+        }
 
-    switchPlayerTurn(); // After the player has inputted a guess, the computer switches whose turn it is
+        switchPlayerTurn(); // After the player has inputted a guess, the computer switches whose turn it is
+    }
 }
 
 //This function inputs the player who won into the database
@@ -311,10 +308,12 @@ function checkIfYouLost() {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             if (fb_data == "first" && whichPlayer == "second") {
+                leavingLobby = true;
                 gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }
             if (fb_data == "second" && whichPlayer == "first") {
+                leavingLobby = true;
                 gameDone();
                 window.location.href = "gtnLoseScreen.html";
             }

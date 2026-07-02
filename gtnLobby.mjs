@@ -13,6 +13,7 @@ var username;
 
 function listenerFunctions() {
     displayLobbies();
+    deleteLobbies();
 }
 
 function getUsername() {
@@ -73,6 +74,16 @@ function lobbyDisconnect() {
     onDisconnect(ref(fb_gamedb, lobbiesPath)).remove(); //Removing the lobby
 }
 
+function deleteUserLobby(){
+    var userLobby = "/lobbyList/" + username;
+    const dbReference= ref(fb_gamedb, userLobby);
+    remove(dbReference).then(() => {
+        console.log("Lobby has been deleted");
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 function addToListOfLobbies() {
     var lobbyListPath = "/lobbyList";
     var addedLobby = { [username]: userUid };
@@ -91,8 +102,8 @@ function addToListOfLobbies() {
 //A lobby button is created for the lobby too, containing an id of the lobby code for easy use later on.
 function displayLobbies() {
     var lobbies = [];
-    const dbReference = ref(fb_gamedb, "/lobbyList");
-    onChildAdded(dbReference, (snapshot) => { //For each lobby added, it does the following code
+    const dbReference2 = ref(fb_gamedb, "/lobbyList");
+    onChildAdded(dbReference2, (snapshot) => { //For each lobby added, it does the following code
         var lobbyName = snapshot.key; //The username of the user who created the lobby
         var lobbyCode = snapshot.val(); //The code for the lobby
         var lobbyDisplay = document.getElementById("lobbyDisplay"); //Getting the html element for the name of the lobby
@@ -104,12 +115,19 @@ function displayLobbies() {
 }
 
 function deleteLobbies() {
+    console.log("delete lobbies");
     const dbReference = ref(fb_gamedb, "/lobbyList");
     onChildRemoved(dbReference, (snapshot) => {
-        var lobbyName = snapshot.key;
+        var lobbyButtonID = snapshot.val();
+        console.log(lobbyButtonID);
+        var lobbyNameID = snapshot.key;
+        console.log(lobbyNameID);
 
-        var lobbyToDelete = document.getElementById(lobbyName);
-        lobbyToDelete.remove();
+        var lobbyNameDisplay = document.getElementById(lobbyNameID);
+        lobbyNameDisplay.remove();
+
+        var lobbyButtonDisplay = document.getElementById(lobbyButtonID);
+        lobbyButtonDisplay.remove();
     });
 }
 
@@ -188,6 +206,7 @@ function checkGameRoomPlayers() {
                         }
                     }
                     if (firstPlayerIn == true && secondPlayerIn == true) {
+                        deleteUserLobby();
                         window.location.href = "gtnGameScreen.html";
                     }
                 } else {
