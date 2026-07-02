@@ -137,8 +137,9 @@ function deleteLobbies() {
 function getCode() {
     document.addEventListener("click", function (event) { //Computer is checking if the user clicks a button
         gameRoomCode = event.target.id;
-        console.log(gameRoomCode);
-        storeSecondPlayerInfo();
+        if (gameRoomCode !== userUid){
+            storeSecondPlayerInfo();
+        }
     });
 }
 
